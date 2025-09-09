@@ -20,9 +20,10 @@
   class="material-button"
   [disabled]="calling"
   (click)="makeCall()">
-  {{ calling ? 'Llamando...' : 'Abrir' }}
+  {{ calling ? 'Apertura iniciada' : 'Abrir' }}
 </button>
 
     <p class="status">{{ statusMessage }}</p>
+
   </div>
 </ion-content>
