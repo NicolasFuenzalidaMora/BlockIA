@@ -1,0 +1,28 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      BlockIA
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">BlockIA</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="wrapper">
+    <b>Presione para activar</b>
+
+   <button
+  class="material-button"
+  [disabled]="calling"
+  (click)="makeCall()">
+  {{ calling ? 'Llamando...' : 'Abrir' }}
+</button>
+
+    <p class="status">{{ statusMessage }}</p>
+  </div>
+</ion-content>
