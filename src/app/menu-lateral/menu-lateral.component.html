@@ -1,0 +1,41 @@
+<ion-menu side="start" menuId="first" contentId="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>BlockIA</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <ion-menu-toggle auto-hide="false">
+        <ion-item routerLink="/home" routerDirection="root">
+          <ion-icon slot="start" name="home-outline"></ion-icon>
+          <ion-label>Página Principal</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+
+      <ion-menu-toggle auto-hide="false">
+        <ion-item routerLink="/visitas" routerDirection="forward">
+          <ion-icon slot="start" name="person-add-outline"></ion-icon>
+          <ion-label>Autorizar Visitas</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+
+      <ion-menu-toggle auto-hide="false">
+        <ion-item routerLink="/historial" routerDirection="forward">
+          <ion-icon slot="start" name="clipboard-outline"></ion-icon>
+          <ion-label>Historial de Accesos</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+
+      <ion-item-divider></ion-item-divider>
+
+      <ion-menu-toggle auto-hide="false">
+        <ion-item routerLink="/perfil" routerDirection="forward">
+          <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+          ""<ion-label>{{ usuarioLoggeado ? usuarioLoggeado : 'Iniciar Sesión' }}</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+    </ion-list>
+  </ion-content>
+</ion-menu>

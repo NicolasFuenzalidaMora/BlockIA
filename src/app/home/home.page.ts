@@ -4,6 +4,7 @@ import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/stan
 import { CallNumber } from '@awesome-cordova-plugins/call-number/ngx';
 import { MatButtonModule } from '@angular/material/button';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -18,7 +19,13 @@ export class HomePage {
   statusMessage = '';
   Message = '';
   calling = false;
+  router: any;
   constructor(private callNumber: CallNumber) {}
+
+irAVisitas() {
+  console.log("Botón clickeado, navegando a visitas...");
+  this.router.navigate(['/visitas']);
+} 
 
   makeCall() {
     this.statusMessage = '📞 Llamando...';

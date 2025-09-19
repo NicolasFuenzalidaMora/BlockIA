@@ -1,8 +1,9 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      BlockIA
-    </ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button menu="first"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Inicio</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -16,14 +17,20 @@
   <div class="wrapper">
     <b>Presione para activar</b>
 
-   <button
-  class="material-button"
-  [disabled]="calling"
-  (click)="makeCall()">
-  {{ calling ? 'Apertura iniciada' : 'Abrir' }}
-</button>
+    <button
+      class="material-button"
+      [disabled]="calling"
+      (click)="makeCall()">
+      {{ calling ? 'Apertura iniciada' : 'Abrir' }}
+    </button>
 
     <p class="status">{{ statusMessage }}</p>
+    <app-menu-lateral></app-menu-lateral>
 
+
+<!-- O con (click) y la función del .ts -->
+<ion-button expand="block" (click)="irAVisitas()">
+  Ir a Visitantes
+</ion-button>
   </div>
 </ion-content>
