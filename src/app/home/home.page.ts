@@ -4,6 +4,9 @@ import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/stan
 import { CallNumber } from '@awesome-cordova-plugins/call-number/ngx';
 import { MatButtonModule } from '@angular/material/button';
 
+// 👇 Importamos nuestro servicio
+import { FirebaseTestService } from '../services/firebase-test.service';
+
 
 @Component({
   selector: 'app-home',
@@ -20,7 +23,14 @@ export class HomePage {
   Message = '';
   calling = false;
   router: any;
-  constructor(private callNumber: CallNumber) {}
+  constructor(private callNumber: CallNumber, private firebaseTest: FirebaseTestService) {}
+
+  ngOnInit() {
+    // 🔥 Probar escritura y lectura en Firestore
+    this.firebaseTest.testWrite();
+    this.firebaseTest.testRead();
+  }
+  
 
 irAVisitas() {
   console.log("Botón clickeado, navegando a visitas...");
