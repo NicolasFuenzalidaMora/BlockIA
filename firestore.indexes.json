@@ -1,0 +1,134 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "historial_2025_08",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "condominioId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "hora",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "historial_2025_09",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "condominioId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "hora",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "historial_2025_10",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "condominioId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "hora",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "portones",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "condominioId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "estado",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "ultimaActualizacion",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "users",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "condominioId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "rol",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    },
+    {
+      "collectionGroup": "visitantes",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "condominioId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "tipo",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "creadoEn",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "DESCENDING"
+        }
+      ],
+      "density": "SPARSE_ALL"
+    }
+  ],
+  "fieldOverrides": [
+    {
+      "collectionGroup": "users",
+      "fieldPath": "password",
+      "ttl": false,
+      "indexes": []
+    }
+  ]
+}

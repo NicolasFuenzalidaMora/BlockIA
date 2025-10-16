@@ -1,65 +1,71 @@
 .wrapper {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; // Ordena los elementos en una columna
   align-items: center;
-  justify-content: center;
+  height: 100%; // Ocupa toda la altura disponible
   text-align: center;
-  font-family: 'Unbounded', sans-serif;
-  padding: 0 16px;
-  box-sizing: border-box;
-}
-
-ion-content {
-  --background: #22223b; // Fondo oscuro
-}
-
-.wrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-family: 'Unbounded', sans-serif;
-  padding: 0 16px;
-  box-sizing: border-box;
-}
-
-b {
-  margin-bottom: 20px;
-  font-size: 18px;
+  padding: 20px;
+  background-color: #2c2c3e;
   color: #ffffff;
 }
 
+b {
+  font-size: 1.2em;
+  margin-top: 40px; // Un poco de espacio superior
+  flex-shrink: 0; // Evita que este texto se encoja
+}
+
 .material-button {
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
+  font-size: 1.8em;
   font-weight: bold;
-  font-size: 28px;
-  background-color: #ffffff;
-  color: #000000;
-  border: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  transition: transform 0.2s, background-color 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-
-.material-button:hover {
-  transform: scale(1.05);
-  background-color: #e0e0e0;
-}
-
-.material-button:active {
-  transform: scale(0.95);
-  background-color: #cccccc;
+  color: #333333;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+  margin-top: 60px; // Más espacio desde el texto
+  margin-bottom: 20px;
+  flex-shrink: 0;
+  // ... (otros estilos de tu botón)
 }
 
 .status {
-  margin-top: 20px;
-  font-size: 16px;
+  min-height: 20px; // Reserva un espacio para el mensaje de estado
+  font-size: 1em;
+  color: #cccccc;
+  flex-shrink: 0;
+}
+
+// ✅ ESTILOS PARA POSICIONAR LA PATENTE AL FINAL
+.patente-display, .spinner-container {
+  margin-top: auto; // ¡Esta es la magia! Empuja el elemento hacia abajo
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.patente-display p {
+  font-size: 0.9em;
+  margin-bottom: 5px;
+  color: #bbbbbb;
+}
+
+.patente-display h2 {
+  font-size: 2.2em;
+  font-weight: bold;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+// Estilos para el botón "Cambiar de patente" (pequeño y blanco)
+ion-button[size="small"] {
+  --background: transparent;
+  --color: #ffffff; // Texto en blanco
+  --box-shadow: none;
+  font-size: 0.8em;
+  text-transform: none;
+  margin-top: 5px;
+}
+
+ion-spinner {
   color: #ffffff;
 }

@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ==========================================
+    // 🧑‍💻 USERS (colección global)
+    // ==========================================
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ==========================================
+    // 🏢 CONDOMINIOS (estructura jerárquica)
+    // ==========================================
+    match /condominios/{condominioId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+
+      // 👤 USERS del condominio
+      match /users/{userId} {
+        allow read: if isMember(condominioId);
+        allow create: if isAdmin();
+        allow update, delete: if isSelf(userId) || isAdmin();
+      }
+
+      // 🚪 PORTONES
+      match /portones/{portonId} {
+        allow read: if isMember(condominioId);
+        allow create, update, delete: if isConserje(condominioId) || isAdmin();
+      }
+
+      // 🧑‍🤝‍🧑 VISITANTES
+      match /visitantes/{visitanteId} {
+        allow read: if isMember(condominioId);
+        allow create, update, delete: if isConserje(condominioId) || isAdmin();
+      }
+
+      // 📜 HISTORIAL (subcolecciones mensuales)
+      match /{subcoll=**}/{historialId} {
+        allow read: if isMember(condominioId);
+        allow create: if isConserje(condominioId) || isAdmin();
+      }
+    }
+
+    // ==========================================
+    // 🔒 FUNCIONES AUXILIARES
+    // ==========================================
+    function isSelf(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.rol == "admin";
+    }
+
+    function isConserje(condominioId) {
+      return request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.rol == "conserje" &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.condominioId == condominioId;
+    }
+
+    function isMember(condominioId) {
+      return request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.condominioId == condominioId;
+    }
+  }
+}

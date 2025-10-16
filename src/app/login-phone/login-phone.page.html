@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="primary">
+
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="login-content">
+  <div class="login-wrapper">
+
+    <!-- Logo o título -->
+    <div class="login-header">
+      <h2>Inicia sesión</h2>
+      <p>Accede con tu número de teléfono</p>
+    </div>
+
+    <div id="recaptcha-container"></div>
+
+    <!-- Teléfono -->
+    <div *ngIf="!otpSent" class="login-form">
+      <ion-item lines="none" class="input-item">
+        <ion-label position="floating">Número de teléfono</ion-label>
+        <ion-input [(ngModel)]="phone" type="tel" inputmode="tel" placeholder="+56912345678"></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" shape="round" class="action-btn" (click)="enviarOTP()">
+        Enviar código
+      </ion-button>
+    </div>
+
+    <!-- OTP -->
+    <div *ngIf="otpSent" class="login-form">
+      <ion-item lines="none" class="input-item">
+        <ion-label position="floating">Código OTP</ion-label>
+        <ion-input [(ngModel)]="otp" type="number" maxlength="6" placeholder="Ingresa el código"></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" shape="round" color="success" class="action-btn" (click)="verificarOTP()">
+        Verificar código
+      </ion-button>
+
+      <p class="hint">Revisa tu SMS, el código llega en segundos.</p>
+    </div>
+
+    <p *ngIf="error" class="error-text">{{ error }}</p>
+
+  </div>
+</ion-content>

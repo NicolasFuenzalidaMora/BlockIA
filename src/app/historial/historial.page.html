@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button menu="first"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Historial de Accesos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <div *ngIf="cargando" class="ion-text-center">
+    <ion-spinner></ion-spinner>
+    <p>Cargando historial...</p>
+  </div>
+
+  <div *ngIf="!cargando && historial.length === 0" class="ion-text-center">
+    <ion-icon name="document-text-outline" style="font-size: 4em;"></ion-icon>
+    <p>No hay registros de acceso para mostrar.</p>
+  </div>
+
+  <ion-list *ngIf="!cargando && historial.length > 0">
+    <ion-card *ngFor="let registro of historial">
+      <ion-card-header>
+        <ion-card-title>{{ registro.patente || 'Patente no registrada' }}</ion-card-title>
+        <ion-card-subtitle>{{ registro.nombreUsuario }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-icon name="business-outline" slot="start" color="medium"></ion-icon>
+          <ion-label>
+            <h2>{{ registro.nombreCondominio }}</h2>
+            <p>{{ registro.direccionCondominio }}</p>
+          </ion-label>
+        </ion-item>
+        
+        <ion-item lines="none">
+          <ion-icon name="time-outline" slot="start" color="medium"></ion-icon>
+          <ion-label>
+            <p>{{ registro.hora.toDate() | localDate }} a las {{ registro.hora.toDate() | localDate:'short' }}</p>
+          </ion-label>
+        </ion-item>
+        
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+  
+</ion-content>

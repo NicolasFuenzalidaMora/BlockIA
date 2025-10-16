@@ -1,27 +1,15 @@
 import { onRequest } from "firebase-functions/https";
 import twilio from "twilio";
-import * as cors from "cors";
+import cors from "cors";
 
-// ⚠️ Credenciales ahora desde variables de entorno
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
+const corsHandler = cors({ origin: true });
 
-if (!accountSid || !authToken) {
-  throw new Error(
-    "Debes definir TWILIO_ACCOUNT_SID y TWILIO_AUTH_TOKEN en tus variables de entorno"
-  );
-}
+// Credenciales directamente para probar
+const accountSid = "ACe620708c686041e42125b4985e5ea07c";
+const authToken = "9c6035276fbfebea583c6accc4dfb296";
+const TWILIO_NUMBER = "+18106708302";
 
 const client = twilio(accountSid, authToken);
-
-// Número de Twilio desde el que se enviarán los SMS
-const TWILIO_NUMBER = process.env.TWILIO_NUMBER;
-if (!TWILIO_NUMBER) {
-  throw new Error("Debes definir TWILIO_NUMBER en tus variables de entorno");
-}
-
-// Crear middleware CORS
-const corsHandler = cors({ origin: true });
 
 export const sendSms = onRequest((req, res) => {
   corsHandler(req, res, async () => {

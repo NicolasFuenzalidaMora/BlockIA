@@ -1,0 +1,75 @@
+.login-content {
+  --background: #1e1e36; /* Fondo oscuro igual a la pantalla principal */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-wrapper {
+  width: 90%;
+  max-width: 400px;
+  margin: auto;
+  text-align: center;
+  color: #fff;
+}
+
+.login-header {
+  margin-bottom: 40px;
+}
+
+.login-logo {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 15px;
+  border-radius: 50%;
+  background: white;
+  padding: 10px;
+}
+
+.login-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 10px 0 5px;
+}
+
+.login-header p {
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.input-item {
+  --background: #2a2a48;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+ion-input {
+  color: white;
+}
+
+.action-btn {
+  margin-top: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: #004dff;
+  color: white;
+  border-radius: 0px;
+  box-shadow: 0 4px 12px rgba(0, 77, 255, 0.3);
+}
+
+.action-btn:hover {
+  filter: brightness(1.2);
+}
+
+.hint {
+  margin-top: 10px;
+  color: #bbb;
+  font-size: 0.85rem;
+}
+
+.error-text {
+  margin-top: 15px;
+  color: #ff5252;
+  font-weight: 500;
+}

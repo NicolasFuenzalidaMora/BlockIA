@@ -1,0 +1,54 @@
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button menu="first"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Registro de Usuario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngIf="cargando">Cargando condominios...</div>
+
+  <form [formGroup]="userForm" (ngSubmit)="registrarUsuario()" *ngIf="!cargando">
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">Nombre</ion-label>
+        <ion-input formControlName="nombre"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input type="email" formControlName="email"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Teléfono</ion-label>
+        <ion-input type="tel" formControlName="telefono"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Rol</ion-label>
+        <ion-select formControlName="rol">
+          <ion-select-option value="residente">Residente</ion-select-option>
+          <ion-select-option value="administrador">Administrador</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Departamento</ion-label>
+        <ion-input formControlName="departamento"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Condominio</ion-label>
+        <ion-select formControlName="condominioId">
+          <ion-select-option *ngFor="let c of condominios" [value]="c.id">{{ c.nombre }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+
+    <ion-button expand="block" type="submit">Registrar Usuario</ion-button>
+  </form>
+</ion-content>

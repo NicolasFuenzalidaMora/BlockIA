@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Condominios & Usuarios</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- ========================= -->
+  <!-- Condominios -->
+  <!-- ========================= -->
+  <h2>Condominios</h2>
+  <div *ngIf="cargandoCondominios">Cargando condominios...</div>
+  <ion-list *ngIf="!cargandoCondominios && condominios.length > 0">
+    <ion-item *ngFor="let c of condominios">
+      <ion-label>
+        {{c.nombre}} (ID: {{c.id}})
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <div *ngIf="!cargandoCondominios && condominios.length === 0">
+    No se encontraron condominios
+  </div>
+
+  <!-- ========================= -->
+  <!-- Usuarios -->
+  <!-- ========================= -->
+<h2>Usuarios</h2>
+<div *ngIf="cargandoUsuarios">Cargando usuarios...</div>
+
+<ion-list *ngIf="!cargandoUsuarios && usuarios.length > 0">
+  <ion-item *ngFor="let u of usuarios">
+    <ion-label>
+      <strong>Nombre:</strong> {{ u.nombre || 'Sin nombre' }}<br>
+      <strong>Email:</strong> {{ u.email || 'Sin email' }}<br>
+      <strong>Teléfono:</strong> {{ u.telefono || 'Sin teléfono' }}<br>
+      <strong>Departamento:</strong> {{ u.departamento || 'Sin departamento' }}<br>
+      <strong>Condominio:</strong> {{ u.condominioId || 'Sin condominio' }}<br>
+      <strong>Rol:</strong> {{ u.rol || 'Sin rol' }}<br>
+      <strong>Creado en:</strong> {{ u.creadoEn?.toDate ? u.creadoEn.toDate() : u.creadoEn | date:'short' }}<br>
+      <strong>ID:</strong> {{ u.id }}
+    </ion-label>
+  </ion-item>
+</ion-list>
+
+<div *ngIf="!cargandoUsuarios && usuarios.length === 0">
+  No se encontraron usuarios
+</div>
+
+
+<ion-content class="ion-padding">
+  
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="crearNuevoCondominio()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  
+</ion-content>
+
+
+</ion-content>

@@ -8,37 +8,29 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">BlockIA</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
   <div class="wrapper">
     <b>Presione para activar</b>
 
-    <!-- Botón para enviar SMS -->
-   <button
-  class="material-button"
-  [style.background-color]="buttonColor"
-  [disabled]="calling"
-  (click)="enviarSMS()">
-  {{ calling ? Message : 'Abrir' }}
-</button>
+    <button
+      class="material-button"
+      [style.background-color]="buttonColor"
+      [disabled]="calling || !patenteSeleccionada"
+      (click)="enviarSMS()">
+      {{ calling ? Message : 'Abrir' }}
+    </button>
 
-    <!-- Mensaje de estado -->
     <p class="status">{{ statusMessage }}</p>
 
-    <!-- Menú lateral -->
-    <app-menu-lateral></app-menu-lateral>
-
-    <!-- Botón para navegar a visitas -->
-    <ion-button expand="block" (click)="irAVisitas()">
-      Ir a Visitantes
-    </ion-button>
+    <div *ngIf="cargandoPerfil" class="spinner-container">
+      <ion-spinner></ion-spinner>
+    </div>
+    <div *ngIf="!cargandoPerfil && patenteSeleccionada" class="patente-display">
+      <p>Vehículo seleccionado:</p>
+      <h2>{{ patenteSeleccionada }}</h2>
+      <ion-button fill="clear" size="small" (click)="cambiarPatente()" *ngIf="userProfile?.patentes?.length > 1">
+        Cambiar de patente
+      </ion-button>
+    </div>
+    
   </div>
 </ion-content>
-
-
-
-

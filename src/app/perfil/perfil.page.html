@@ -7,30 +7,53 @@
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content class="ion-padding">
 
-  <ion-card>
-    <ion-card-content class="ion-text-center">
-      <!-- Foto -->
-      <ion-avatar style="margin: auto; width: 100px; height: 100px;">
-        <img [src]="user.foto" alt="Foto de usuario" />
-      </ion-avatar>
+  <div *ngIf="cargando" class="ion-text-center">
+    <ion-spinner></ion-spinner>
+    <p>Cargando perfil...</p>
+  </div>
 
-      <!-- Nombre y datos -->
-      <h2>{{ user.nombre }} {{ user.apellido }}</h2>
-      <p>{{ user.comunidad }}</p>
-    </ion-card-content>
-  </ion-card>
+  <div *ngIf="!cargando && userProfile">
+    <ion-card>
+      <ion-card-content class="ion-text-center">
+        <ion-avatar style="margin: auto; width: 100px; height: 100px;">
+          <img [src]="userProfile.fotoUrl || 'https://ionicframework.com/docs/img/demos/avatar.svg'" alt="Foto de usuario" />
+        </ion-avatar>
 
-  <!-- Botón cambiar contraseña -->
-  <ion-button expand="block" color="medium" (click)="cambiarPassword()">
-    Cambiar contraseña
-  </ion-button>
+        <h2>{{ userProfile.nombre }}</h2>
+        <p>{{ userProfile.nombreCondominio }}</p>
 
-  <!-- Botón cerrar sesión -->
-  <ion-button expand="block" color="danger" (click)="logout()">
-    Cerrar sesión
-  </ion-button>
+        <p *ngIf="userProfile.departamento">
+          <ion-icon name="home-outline" slot="start"></ion-icon>
+          Depto / Casa: {{ userProfile.departamento }}
+        </p>
+
+        <div *ngIf="userProfile.patentes && userProfile.patentes.length > 0">
+          <ion-chip outline="true">
+            <ion-icon name="car-sport-outline"></ion-icon>
+            <ion-label>{{ userProfile.patentes[0] }}</ion-label>
+            <ion-label *ngIf="userProfile.patentes.length > 1" style="margin-left: 4px;"><b>+</b></ion-label>
+          </ion-chip>
+        </div>
+        
+        <ion-chip outline="true" color="primary">
+          <ion-label>{{ userProfile.rol }}</ion-label>
+        </ion-chip>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-button expand="block" color="medium" (click)="editarPerfil()">
+      ✏️ Editar Perfil
+    </ion-button>
+
+    <ion-button expand="block" color="danger" (click)="logout()">
+      Cerrar sesión
+    </ion-button>
+  </div>
+
+  <div *ngIf="!cargando && !userProfile" class="ion-text-center">
+    <p>No se pudo cargar la información del perfil.</p>
+  </div>
 
 </ion-content>
