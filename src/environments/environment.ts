@@ -1,3 +1,5 @@
+// src/environments/environment.ts
+
 export const environment = {
   production: false,
   // Aquí es donde pusiste tu configuración de Firebase
