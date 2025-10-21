@@ -1,0 +1,113 @@
+/* En completar-perfil.page.scss */
+
+ion-content {
+  --background: #22223b;
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; // Alinea arriba
+  text-align: center;
+  font-family: 'Unbounded', sans-serif;
+  padding: 16px;
+  box-sizing: border-box;
+  flex-grow: 1;
+  overflow-y: auto; // Scroll SÓLO si es necesario
+  width: 100%;
+}
+
+b { // Título "¡Bienvenido a Blockia!"
+  margin-bottom: 10px; // Menos margen que en visitas
+  font-size: 1.4rem; // Un poco más grande
+  color: #ffffff;
+  width: 100%;
+  text-align: center;
+  font-weight: 600;
+}
+
+.info-text { // Párrafo de introducción
+  color: #d0d0d0; // Un poco más tenue
+  margin-bottom: 25px; // Más espacio después
+  font-size: 0.95rem;
+  text-align: center;
+  width: 100%;
+}
+
+// Estilos generales para los items del formulario
+ion-item {
+  --background: #3e3e5a;
+  --color: #ffffff;
+  margin-top: 15px; // Más espacio entre items
+  border-radius: 8px;
+  --border-color: transparent;
+  --highlight-color-focused: var(--ion-color-primary);
+  --inner-padding-end: 8px; // Ajustar padding interno
+
+  ion-input, ion-select {
+    --color: #ffffff;
+    --placeholder-color: #bdbdd3;
+  }
+
+  ion-label[position="floating"], ion-label[position="stacked"] {
+    color: #bdbdd3;
+    font-size: 0.9rem;
+    font-weight: 500; // Un poco más grueso
+  }
+
+  // Estilo al enfocar o tener valor
+  &.item-has-focus ion-label[position="floating"],
+  &.item-has-value ion-label[position="floating"],
+  &.item-has-focus ion-label[position="stacked"],
+  &.item-has-value ion-label[position="stacked"] {
+    color: var(--ion-color-primary-tint);
+  }
+
+  // Botón '+' dentro del item de patente
+  ion-button[slot="end"] {
+      --padding-start: 0;
+      --padding-end: 0;
+      height: 30px; // Ajustar tamaño si es necesario
+      margin-inline-start: 8px;
+  }
+}
+
+// Estilos específicos para la lista de patentes agregadas
+.patentes-list {
+  background: transparent; // Sin fondo blanco
+  margin-top: 5px;
+  margin-bottom: 10px;
+  padding-left: 0; // Quitar padding izquierdo por defecto
+
+  ion-item {
+    --background: rgba(255, 255, 255, 0.1); // Fondo semitransparente para destacar
+    --min-height: 40px; // Más compacto
+    --inner-padding-start: 16px;
+     margin-top: 5px;
+
+    ion-label {
+      font-size: 0.9rem;
+      color: #e0e0e0; // Texto un poco más claro
+    }
+
+    ion-button { // Botón de borrar
+        height: 24px;
+        --padding-start: 4px;
+        --padding-end: 4px;
+    }
+  }
+}
+
+// Estilos para el botón principal
+ion-button[expand="block"] {
+  border-radius: 16px;
+  margin-top: 30px; // Más espacio antes del botón principal
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  font-weight: bold;
+  --padding-top: 15px;
+  --padding-bottom: 15px;
+  text-transform: uppercase; // Mayúsculas
+  letter-spacing: 0.5px; // Espaciado
+}

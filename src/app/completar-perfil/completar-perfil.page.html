@@ -4,35 +4,51 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <div class="form-container">
-    <ion-text>
-      <h3>¡Bienvenido a Blockia!</h3>
-    </ion-text>
-    <p>Solo necesitamos unos datos más para activar tu cuenta.</p>
+<ion-content> <div class="wrapper ion-padding">
+    <b>¡Bienvenido a Blockia!</b> <p class="info-text"> Solo necesitamos unos datos más para activar tu cuenta.
+    </p>
 
-    <ion-list>
-      <ion-item>
+    <ion-item>
         <ion-label position="floating">Nombre Completo</ion-label>
         <ion-input type="text" [(ngModel)]="nombreCompleto" required></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label position="floating">Patente del Vehículo (Ej: ABCD12)</ion-label>
-        <ion-input type="text" [(ngModel)]="patente" required></ion-input>
+        <ion-label position="floating">Patente (Ej: ABCD12)</ion-label>
+        <ion-input
+          type="text"
+          [(ngModel)]="patenteActual"
+          (keyup.enter)="agregarPatente()">
+        </ion-input>
+        <ion-button slot="end" fill="clear" (click)="agregarPatente()">
+          <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+        </ion-button>
       </ion-item>
 
+      <ion-list *ngIf="patentesAgregadas.length > 0" lines="none" class="patentes-list">
+        <ion-item *ngFor="let patente of patentesAgregadas; let i = index">
+            <ion-label>{{ patente }}</ion-label>
+            <ion-button slot="end" fill="clear" color="danger" size="small" (click)="eliminarPatente(i)">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-button>
+          </ion-item>
+      </ion-list>
       <ion-item>
-        <ion-label>Condominio</ion-label>
-        <ion-select [(ngModel)]="condominioIdSeleccionado" placeholder="Selecciona uno" required>
+        <ion-label position="stacked">Condominio(s)</ion-label> <ion-select
+          [(ngModel)]="condominiosSeleccionados"
+          placeholder="Selecciona uno o más"
+          required
+          multiple="true"
+          (ionChange)="condominiosCambiados($event)">
           <ion-select-option *ngFor="let condo of condominios" [value]="condo.id">
             {{ condo.nombre }}
           </ion-select-option>
         </ion-select>
       </ion-item>
-    </ion-list>
-
-    <ion-button expand="block" class="ion-margin-top" (click)="guardarPerfil()" [disabled]="!nombreCompleto || !patente || !condominioIdSeleccionado">
+      <ion-button
+      expand="block"
+      (click)="guardarPerfil()"
+      [disabled]="!nombreCompleto || patentesAgregadas.length === 0 || condominiosSeleccionados.length === 0">
       Guardar y Continuar
     </ion-button>
   </div>

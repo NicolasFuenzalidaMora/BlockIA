@@ -7,39 +7,49 @@
   </ion-toolbar>
 </ion-header>
 
-
-<ion-content [fullscreen]="true">
-  <div class="wrapper">
+<ion-content>
+  <div class="wrapper ion-padding">
     <b>Agregar una visita</b>
-    <p class="info-text">
-  Para enviar una invitación y poder usar los servicios solo agrega su número de Teléfono con el nombre. Le llegará un mensaje.
-</p>
-  <form (ngSubmit)="addVisitaForm()" #visitaForm="ngForm">
-  <ion-item>
-    <ion-label position="floating">Nombre</ion-label>
-    <ion-input type="text" name="name" [(ngModel)]="visitaName" required></ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-label position="floating">Teléfono</ion-label>
-    <ion-input type="tel" name="phone" [(ngModel)]="visitaPhone" required></ion-input>
-  </ion-item>
-
-  <!-- Botón enviar visita -->
-  <ion-button expand="block" color="primary" type="submit" [disabled]="!visitaForm.form.valid">
-    Enviar
-  </ion-button>
-</form>
-
-<!-- Botón invitar desde contactos -->
-<ion-button expand="block" color="secondary" type="button" (click)="openContacts()">
-  Enviar invitación a contactos
-</ion-button>
-
-    <ion-list>
-      <ion-item *ngFor="let visita of visitas">
-        {{ visita.name }} - {{ visita.phone }}
+    <form (ngSubmit)="addVisitaForm()">
+      <ion-item>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input type="text" [(ngModel)]="visitaName" name="name" required></ion-input>
       </ion-item>
-    </ion-list>
-  </div>
+
+      <ion-item>
+        <ion-label position="floating">Teléfono</ion-label>
+        <ion-input type="tel" [(ngModel)]="visitaPhone" name="phone" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Patente</ion-label>
+        <ion-input type="text" [(ngModel)]="visitaPatente" name="patente" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Hora de entrada</ion-label>
+        <ion-input type="time" [(ngModel)]="visitaHoraInicio" name="horaInicio" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Hora de salida</ion-label>
+        <ion-input type="time" [(ngModel)]="visitaHoraFin" name="horaFin" required></ion-input>
+      </ion-item>
+
+      <p style="font-size: 0.85rem; color: #d0d0d0; margin-top: 15px; text-align: left;"> Enviar a: <strong>{{ condominioSeleccionado?.nombre || 'Ninguno seleccionado' }}</strong>
+
+        <button *ngIf="misCondominios.length > 1" (click)="cambiarCondominio()" style="font-size: 0.75rem; margin-left: 5px; background: none; border: none; color: var(--ion-color-primary); cursor: pointer; vertical-align: middle;">
+          Cambiar
+        </button>
+      </p>
+
+      <ion-button expand="block" color="primary" type="submit" class="ion-margin-top"> Enviar invitación (WHATSAPP)
+      </ion-button>
+    </form>
+    </div> <ion-fab slot="fixed" vertical="bottom" horizontal="start">
+    <ion-fab-button (click)="verHistorialInvitaciones()">
+      <ion-icon name="clipboard-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>

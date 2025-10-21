@@ -44,20 +44,26 @@
     <ion-item *ngFor="let patente of datosEditables.patentes; let i = index">
       <ion-label>{{ patente }}</ion-label>
       <ion-button fill="clear" color="danger" (click)="eliminarPatente(i)">
-        <ion-icon name="trash-outline"></ion-icon>
+        <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-input [(ngModel)]="nuevaPatente" placeholder="Agregar nueva patente (ABCD12)" (keyup.enter)="agregarPatente()"></ion-input>
+      <ion-button (click)="agregarPatente()" [disabled]="!nuevaPatente">
+        <ion-icon name="add-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-item>
   </ion-list>
 
-  <ion-item>
-    <ion-input [(ngModel)]="nuevaPatente" placeholder="Agregar nueva patente (ABCD12)"></ion-input>
-    <ion-button (click)="agregarPatente()" [disabled]="!nuevaPatente">
-      <ion-icon name="add-outline"></ion-icon>
-    </ion-button>
-  </ion-item>
+<ion-button 
+    expand="block" 
+    class="ion-margin-top" 
+    color="primary" 
+    (click)="guardarCambios()" 
+    [disabled]="subiendoFoto">
+  <span *ngIf="!subiendoFoto" style="color: rgb(0, 0, 0);">Guardar Cambios</span>
+  <ion-spinner *ngIf="subiendoFoto" name="crescent" color="light"></ion-spinner>
+</ion-button>
 
-  <ion-button expand="block" class="ion-margin-top" (click)="guardarCambios()">
-    Guardar Cambios
-  </ion-button>
 
 </ion-content>

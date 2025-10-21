@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="cerrar()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Invitaciones Enviadas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngIf="cargando" class="ion-text-center ion-padding">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ion-list *ngIf="!cargando && invitaciones.length > 0">
+    <ion-item *ngFor="let inv of invitaciones">
+      <ion-label>
+        <h2>{{ inv.nombre }}</h2>
+        <p>Patente: {{ inv.patente }} | Tel: {{ inv.telefono }}</p>
+        <p>Válido: {{ inv.horaInicio }} - {{ inv.horaFin }}</p>
+        </ion-label>
+
+      <ion-button slot="end" fill="clear" color="danger" (click)="cancelarInvitacion(inv)">
+         <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
+      </ion-button>
+
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="!cargando && invitaciones.length === 0" class="ion-text-center ion-padding message-container">
+    <ion-icon name="document-text-outline" size="large" color="medium"></ion-icon>
+    <p>No has enviado ninguna invitación aún.</p>
+  </div>
+</ion-content>

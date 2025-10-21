@@ -1,51 +1,73 @@
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-family: 'Unbounded', sans-serif;
-  padding: 0 16px;
-  box-sizing: border-box;
-  min-height: 100vh;
-}
+/* En visitas.page.scss */
 
 ion-content {
   --background: #22223b;
+  display: flex;
+  flex-direction: column;
 }
 
-b {
+.wrapper {
+  // Sin min-height
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; // Alinea arriba
+  text-align: center;
+  font-family: 'Unbounded', sans-serif;
+  padding: 16px; // Padding uniforme
+  box-sizing: border-box;
+  flex-grow: 1; // Ocupa espacio vertical
+  overflow-y: auto; // Scroll SÓLO si es necesario
+  width: 100%;
+}
+
+b { // Título "Agregar una visita"
   margin-bottom: 20px;
-  font-size: 18px;
+  font-size: 1.3rem; // Un poco más grande
   color: #ffffff;
+  width: 100%;
+  text-align: center;
+  font-weight: 600; // Más grueso
 }
 
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
 ion-item {
-  background: #33334d;
-  color: #000000;
-  margin-top: 10px;
+  --background: #3e3e5a; // Un poco más claro para contraste
+  --color: #ffffff; // Texto dentro del item
+  margin-top: 12px; // Espaciado
   border-radius: 8px;
-}
+  --border-color: transparent; // Quitar borde si no gusta
+  --highlight-color-focused: var(--ion-color-primary); // Color al enfocar
 
-.info-text {
-  color: #ffffff;
-  margin-bottom: 20px;
-  font-size: 14px;
-  text-align: center;
+  ion-input {
+    --color: #ffffff;
+    --placeholder-color: #bdbdd3;
+  }
+  ion-label[position="floating"] { // Estilo específico para etiquetas flotantes
+      color: #bdbdd3;
+      font-size: 0.9rem; // Ajusta tamaño si es necesario
+  }
+  // Estilo cuando el item está enfocado o tiene valor
+  &.item-has-focus ion-label[position="floating"],
+  &.item-has-value ion-label[position="floating"] {
+    color: var(--ion-color-primary-tint); // Color más claro de la etiqueta al flotar
+  }
 }
-
 
 ion-button {
   border-radius: 16px;
-  margin-top: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-top: 25px; // Más espacio antes del botón principal
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2); // Sombra más pronunciada
   font-weight: bold;
+  --padding-top: 15px; // Botón más alto
+  --padding-bottom: 15px;
 }
 
-.error-msg {
-  color: red;
-  font-size: 0.8rem;
-  margin-left: 16px;
-  margin-top: 4px;
+// Estilos específicos para el FAB button
+ion-fab-button {
+  --box-shadow: 0 4px 15px rgba(0,0,0,0.3); // Sombra para el FAB
 }
