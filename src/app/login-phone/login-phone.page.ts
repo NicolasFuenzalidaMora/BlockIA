@@ -25,27 +25,46 @@ export class LoginPhonePage {
   constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit() {
-    this.auth.initRecaptcha('recaptcha-container');
+  console.log('[LOGIN] ngOnInit: initRecaptcha');
+  this.auth.initRecaptcha('recaptcha-container');
   }
 
-  async enviarOTP() {
-    try {
-      await this.auth.sendOTP(this.phone);
-      this.otpSent = true;
-      this.error = '';
-    } catch (err: any) {
-      console.error(err);
-      this.error = err.message;
-    }
+async enviarOTP() {
+  this.error = '';
+  try {
+    console.log('[LOGIN] enviarOTP start', { phone: this.phone });
+    await this.auth.sendOTP(this.phone);
+    console.log('[LOGIN] enviarOTP OK');
+    this.otpSent = true;
+  } catch (err: any) {
+    console.error('[LOGIN] enviarOTP ERROR', {
+      code: err?.code,
+      message: err?.message,
+      name: err?.name,
+      stack: err?.stack,
+      raw: err,
+    });
+    this.error = err?.message || 'Error al enviar OTP';
   }
+}
 
-  async verificarOTP() {
-    try {
-      await this.auth.verifyOTP(this.otp);
-      this.router.navigate(['/home']);
-    } catch (err: any) {
-      console.error(err);
-      this.error = 'OTP incorrecto';
-    }
+async verificarOTP() {
+  this.error = '';
+  try {
+    console.log('[LOGIN] verificarOTP start', { otp: this.otp });
+    await this.auth.verifyOTP(this.otp);
+    console.log('[LOGIN] verificarOTP OK → /home');
+    this.router.navigate(['/home']);
+  } catch (err: any) {
+    console.error('[LOGIN] verificarOTP ERROR', {
+      code: err?.code,
+      message: err?.message,
+      name: err?.name,
+      stack: err?.stack,
+      raw: err,
+    });
+    this.error = err?.message || 'OTP incorrecto';
   }
+}
+
 }

@@ -1,71 +1,86 @@
+/* Layout general */
 .wrapper {
+  min-height: 100%;
   display: flex;
-  flex-direction: column; // Ordena los elementos en una columna
-  align-items: center;
-  height: 100%; // Ocupa toda la altura disponible
-  text-align: center;
-  padding: 20px;
   background-color: #2c2c3e;
-  color: #ffffff;
+  color: #fff;
+}
+.content-switch-container { flex: 1; display: flex; }
+
+/* Centra todo el caso aprobado */
+.aprobado-container {
+  margin: auto;                 /* centra vertical y horizontal */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
 }
 
-b {
-  font-size: 1.2em;
-  margin-top: 40px; // Un poco de espacio superior
-  flex-shrink: 0; // Evita que este texto se encoja
+/* Texto + botón juntos y alineados */
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;              /* permite pasar a dos líneas en pantallas chicas */
 }
 
+.cta-label b {
+  font-size: 1.1rem;
+  letter-spacing: .2px;
+  white-space: nowrap;          /* evita cortes raros en desktop */
+}
+
+/* Botón circular – sin márgenes “manuales” */
 .material-button {
-  width: 150px;
-  height: 150px;
+  width: 170px;
+  height: 170px;
   border-radius: 50%;
-  font-size: 1.8em;
-  font-weight: bold;
-  color: #333333;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
-  margin-top: 60px; // Más espacio desde el texto
-  margin-bottom: 20px;
-  flex-shrink: 0;
-  // ... (otros estilos de tu botón)
+  border: none;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #2c2c3e;               /* contraste con botón claro */
+  background: #fff;             /* por si no llega [style.background-color] */
+  box-shadow: 0 10px 24px rgba(0,0,0,.25);
+  transition: transform .08s ease, box-shadow .2s ease, opacity .2s ease;
+  cursor: pointer;
 }
+.material-button:active { transform: scale(.98); }
+.material-button[disabled] { opacity: .6; cursor: not-allowed; box-shadow: none; }
 
-.status {
-  min-height: 20px; // Reserva un espacio para el mensaje de estado
-  font-size: 1em;
-  color: #cccccc;
-  flex-shrink: 0;
+/* Status fijo para que no “salte” el layout */
+.status { min-height: 1.25rem; color: #cfd3de; }
+
+/* Tarjetas de contexto */
+.context-container {
+  width: min(640px, 92vw);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .75rem;
 }
-
-// ✅ ESTILOS PARA POSICIONAR LA PATENTE AL FINAL
-.patente-display, .spinner-container {
-  margin-top: auto; // ¡Esta es la magia! Empuja el elemento hacia abajo
-  margin-bottom: 20px;
-  width: 100%;
+.context-display, .patente-display {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  padding: .9rem 1rem;
 }
+.context-display h2, .patente-display h2 { margin: .25rem 0 0; font-size: 1.6rem; color: #fff; }
+.context-display p, .patente-display p { margin: 0; color: #c9ceda; }
 
-.patente-display p {
-  font-size: 0.9em;
-  margin-bottom: 5px;
-  color: #bbbbbb;
-}
-
-.patente-display h2 {
-  font-size: 2.2em;
-  font-weight: bold;
-  margin: 0;
-  letter-spacing: 2px;
-}
-
-// Estilos para el botón "Cambiar de patente" (pequeño y blanco)
+/* Botón pequeño “cambiar” */
 ion-button[size="small"] {
   --background: transparent;
-  --color: #ffffff; // Texto en blanco
+  --color: #ffffff;
   --box-shadow: none;
-  font-size: 0.8em;
+  font-size: 0.85em;
   text-transform: none;
-  margin-top: 5px;
+  margin-top: 6px;
 }
 
-ion-spinner {
-  color: #ffffff;
+/* Responsive: apila el texto sobre el botón */
+@media (max-width: 480px) {
+  .cta { flex-direction: column; gap: 8px; }
+  .cta-label b { white-space: normal; }
+  .material-button { width: 160px; height: 160px; font-size: 1.8rem; }
 }

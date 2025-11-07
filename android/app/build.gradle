@@ -1,8 +1,10 @@
 apply plugin: 'com.android.application'
+// aplica google-services **una sola vez** al final del archivo (ver más abajo)
 
 android {
     namespace "block.ia"
     compileSdk rootProject.ext.compileSdkVersion
+
     defaultConfig {
         applicationId "block.ia"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -10,12 +12,13 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
         aaptOptions {
-             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
-             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            // Ajustado para apps web modernas
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -23,7 +26,6 @@ android {
         }
     }
 
-    // 👇 AÑADE ESTE BLOQUE AQUÍ
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -31,30 +33,37 @@ android {
 }
 
 repositories {
-    flatDir{
+    // Puedes dejar este flatDir si alguna lib Cordova/Capacitor solo existe localmente,
+    // pero OJO: NO reemplaza a google() / mavenCentral() del proyecto.
+    flatDir {
         dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
     }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+
     implementation project(':capacitor-android')
+    implementation project(':capacitor-cordova-android-plugins')
+
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
-    implementation project(':capacitor-cordova-android-plugins')
+
+    // 🔥 Firebase BOM + Auth (SIN versión explícita en firebase-auth)
+    implementation platform('com.google.firebase:firebase-bom:33.4.0')
+    implementation 'com.google.firebase:firebase-auth'
+
+    // Si usas Google Sign-In (opcional)
+    // implementation 'com.google.android.gms:play-services-auth:21.2.0'
 }
 
 apply from: 'capacitor.build.gradle'
 
-try {
-    def servicesJSON = file('google-services.json')
-    if (servicesJSON.text) {
-        apply plugin: 'com.google.gms.google-services'
-    }
-} catch(Exception e) {
-    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
-}
+// ❌ Quita el bloque try/catch y la segunda aplicación duplicada.
+// ✅ Aplica google-services **una sola vez**:
+apply plugin: 'com.google.gms.google-services'

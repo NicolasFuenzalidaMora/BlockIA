@@ -7,9 +7,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="visitas-content">
   <div class="wrapper ion-padding">
     <b>Agregar una visita</b>
+
     <form (ngSubmit)="addVisitaForm()">
       <ion-item>
         <ion-label position="floating">Nombre</ion-label>
@@ -36,20 +37,27 @@
         <ion-input type="time" [(ngModel)]="visitaHoraFin" name="horaFin" required></ion-input>
       </ion-item>
 
-      <p style="font-size: 0.85rem; color: #d0d0d0; margin-top: 15px; text-align: left;"> Enviar a: <strong>{{ condominioSeleccionado?.nombre || 'Ninguno seleccionado' }}</strong>
-
-        <button *ngIf="misCondominios.length > 1" (click)="cambiarCondominio()" style="font-size: 0.75rem; margin-left: 5px; background: none; border: none; color: var(--ion-color-primary); cursor: pointer; vertical-align: middle;">
+      <p class="envio-a">
+        Enviar a:
+        <strong>{{ condominioSeleccionado?.nombre || 'Ninguno seleccionado' }}</strong>
+        <button
+          *ngIf="(misCondominios?.length ?? 0) > 1"
+          type="button"
+          class="btn-cambiar"
+          (click)="cambiarCondominio()">
           Cambiar
         </button>
       </p>
 
-      <ion-button expand="block" color="primary" type="submit" class="ion-margin-top"> Enviar invitación (WHATSAPP)
+      <ion-button expand="block" color="primary" type="submit" class="ion-margin-top">
+        ENVIAR INVITACIÓN (WHATSAPP)
+      </ion-button>
+
+      <!-- Botón secundario para ver historial (reemplaza el FAB) -->
+      <ion-button expand="block" fill="outline" color="medium" class="ion-margin-top"
+                  type="button" (click)="verHistorialInvitaciones()">
+        Ver historial de invitaciones
       </ion-button>
     </form>
-    </div> <ion-fab slot="fixed" vertical="bottom" horizontal="start">
-    <ion-fab-button (click)="verHistorialInvitaciones()">
-      <ion-icon name="clipboard-outline"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-
+  </div>
 </ion-content>

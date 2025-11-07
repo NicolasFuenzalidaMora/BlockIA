@@ -2,8 +2,7 @@
 
 export const environment = {
   production: false,
-  // Aquí es donde pusiste tu configuración de Firebase
-  firebase: {
+  firebaseConfig: {
     apiKey: "AIzaSyBJEm5DPF4KTky9BRVbLZWfJa9laUBneOY",
     authDomain: "device-streaming-5a92a11d.firebaseapp.com",
     projectId: "device-streaming-5a92a11d",

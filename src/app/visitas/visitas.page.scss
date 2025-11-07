@@ -1,32 +1,27 @@
-/* En visitas.page.scss */
-
-ion-content {
+/* Fondo + padding general del contenido */
+.visitas-content {
   --background: #22223b;
-  display: flex;
-  flex-direction: column;
 }
 
 .wrapper {
-  // Sin min-height
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; // Alinea arriba
+  justify-content: flex-start;
   text-align: center;
   font-family: 'Unbounded', sans-serif;
-  padding: 16px; // Padding uniforme
+  padding: 16px;
   box-sizing: border-box;
-  flex-grow: 1; // Ocupa espacio vertical
-  overflow-y: auto; // Scroll SÓLO si es necesario
   width: 100%;
+  color: #fff;
 }
 
-b { // Título "Agregar una visita"
+b {
   margin-bottom: 20px;
-  font-size: 1.3rem; // Un poco más grande
+  font-size: 1.3rem;
   color: #ffffff;
   width: 100%;
   text-align: center;
-  font-weight: 600; // Más grueso
+  font-weight: 600;
 }
 
 form {
@@ -36,38 +31,51 @@ form {
 }
 
 ion-item {
-  --background: #3e3e5a; // Un poco más claro para contraste
-  --color: #ffffff; // Texto dentro del item
-  margin-top: 12px; // Espaciado
+  --background: #3e3e5a;
+  --color: #ffffff;
+  margin-top: 12px;
   border-radius: 8px;
-  --border-color: transparent; // Quitar borde si no gusta
-  --highlight-color-focused: var(--ion-color-primary); // Color al enfocar
+  --border-color: transparent;
+  --highlight-color-focused: var(--ion-color-primary);
 
   ion-input {
     --color: #ffffff;
     --placeholder-color: #bdbdd3;
   }
-  ion-label[position="floating"] { // Estilo específico para etiquetas flotantes
-      color: #bdbdd3;
-      font-size: 0.9rem; // Ajusta tamaño si es necesario
+
+  ion-label[position="floating"] {
+    color: #bdbdd3;
+    font-size: 0.9rem;
   }
-  // Estilo cuando el item está enfocado o tiene valor
+
   &.item-has-focus ion-label[position="floating"],
   &.item-has-value ion-label[position="floating"] {
-    color: var(--ion-color-primary-tint); // Color más claro de la etiqueta al flotar
+    color: var(--ion-color-primary-tint);
   }
 }
 
 ion-button {
   border-radius: 16px;
-  margin-top: 25px; // Más espacio antes del botón principal
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2); // Sombra más pronunciada
+  margin-top: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
   font-weight: bold;
-  --padding-top: 15px; // Botón más alto
-  --padding-bottom: 15px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
 }
 
-// Estilos específicos para el FAB button
-ion-fab-button {
-  --box-shadow: 0 4px 15px rgba(0,0,0,0.3); // Sombra para el FAB
+/* Texto “Enviar a …” y botón cambiar */
+.envio-a {
+  font-size: 0.9rem;
+  color: #d0d0d0;
+  margin: 12px 0 0;
+  text-align: left;
+}
+.btn-cambiar {
+  font-size: 0.8rem;
+  margin-left: 6px;
+  background: none;
+  border: none;
+  color: var(--ion-color-primary);
+  cursor: pointer;
+  vertical-align: baseline;
 }

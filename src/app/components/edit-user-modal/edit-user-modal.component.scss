@@ -1,0 +1,135 @@
+/* Ruta: src/app/components/edit-user-modal/edit-user-modal.component.scss */
+
+// 1. Fondo y fuente base del contenido del modal
+ion-content.modal-content {
+  --background: #22223b; // Mantenemos el fondo oscuro
+  font-family: 'Unbounded', sans-serif; // Mantenemos la fuente
+  --padding-start: 16px; // Padding general
+  --padding-end: 16px;
+  --padding-top: 10px;
+  --padding-bottom: 20px;
+}
+
+// 2. Contenedor principal de información (si existe el usuario)
+.usuario-encontrado {
+  h3 { // Nombre del usuario
+    font-weight: 600;
+    font-size: 1.4rem; // Un poco más grande
+    color: var(--ion-color-primary-tint); // Color principal
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  p { // Teléfono y ID
+    color: #bdbdd3; // Gris claro
+    font-size: 0.9rem;
+    margin: 2px 0 10px 0; // Menos margen vertical
+    text-align: center;
+  }
+}
+
+// 3. Estilo general para todos los items del formulario
+ion-item {
+  --background: #3e3e5a; // Fondo del item (igual que admin)
+  --color: #ffffff;      // Color del texto/input
+  --border-color: transparent; // Sin bordes
+  --highlight-color-focused: var(--ion-color-primary); // Borde al enfocar
+  --inner-padding-end: 8px; // Ajuste padding interno
+  border-radius: 8px;
+  margin-top: 12px;       // Espacio superior entre items
+  margin-bottom: 12px;    // Espacio inferior entre items
+
+  // Inputs y Selects dentro de los items
+  ion-input, ion-select {
+    --color: #ffffff;
+    --placeholder-color: #bdbdd3;
+  }
+  
+  // Estilo para las etiquetas flotantes
+  ion-label[position="floating"] {
+    color: #bdbdd3; 
+    font-weight: 500; // Un poco más grueso
+  }
+
+  // Al enfocar o tener valor
+  &.item-has-focus ion-label[position="floating"],
+  &.item-has-value ion-label[position="floating"] {
+    color: var(--ion-color-primary-tint); 
+  }
+}
+
+// 4. Separador visual entre secciones
+hr {
+  border: 0;
+  border-top: 1px solid #3e3e5a; // Línea del mismo color que el fondo del item
+  margin: 25px 0; // Más espacio vertical
+}
+
+// 5. Cabeceras de las listas (Patentes, Roles)
+ion-list-header {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding-left: 5px; // Menos padding izquierdo
+  margin-bottom: 0px; // Menos espacio debajo
+}
+
+// 6. Lista de patentes agregadas
+.patentes-list {
+  background: transparent; // Sin fondo
+  margin-top: 5px;       // Menos espacio arriba
+
+  ion-item {
+    --background: #4a4a6a; // Fondo ligeramente diferente para destacar
+    --min-height: 40px;   // Items más compactos
+    margin-top: 4px;      // Menos espacio
+    margin-bottom: 4px;
+
+    ion-label {
+      font-size: 0.95rem;
+    }
+    ion-button { // Botón de eliminar
+      --padding-start: 5px;
+      --padding-end: 5px;
+      height: 28px; // Botón más pequeño
+    }
+  }
+}
+
+// 7. Grupo de Radios para seleccionar condominio
+ion-radio-group {
+  ion-list-header {
+      font-size: 1rem; // Más pequeño
+      font-weight: 500;
+      color: #bdbdd3;
+  }
+  ion-item { // Los items dentro del radio group
+    --background: transparent; // Sin fondo para integrarse
+    --inner-border-width: 0;   // Sin línea inferior interna
+    margin-top: 2px;
+    margin-bottom: 2px;
+
+    ion-radio {
+      margin-right: 10px;
+    }
+    ion-label {
+      font-size: 0.9rem;
+      color: #e0e0e0; // Texto un poco más claro
+    }
+  }
+}
+
+// 8. Botón principal de Guardar Cambios
+ion-button[color="success"] { // Estilo específico para el botón de guardar
+  border-radius: 16px;
+  margin-top: 30px; // Más espacio arriba
+  font-weight: bold;
+  --padding-top: 15px;
+  --padding-bottom: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3); // Sombra más notoria
+}
+
+// 9. Mensaje de error si no hay usuario
+.ion-text-center {
+    margin-top: 40px;
+    color: var(--ion-color-medium);
+}

@@ -13,42 +13,66 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div class="wrapper"> <b>Presione para activar</b>
+  <div class="wrapper ion-padding">
 
-    <div *ngIf="cargandoPerfil && !condominioSeleccionado" class="spinner-container ion-padding">
-      <ion-spinner></ion-spinner>
-    </div>
+    <div [ngSwitch]="estadoUsuario" class="content-switch-container">
 
-    <ng-container *ngIf="!cargandoPerfil || condominioSeleccionado">
+      <div *ngSwitchCase="'cargando'" class="estado-container">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Cargando tu información...</p>
+      </div>
 
-      <button
-        class="material-button"
-        [style.background-color]="buttonColor"
-        [disabled]="calling || !patenteSeleccionada || !condominioSeleccionado"
-        (click)="enviarSMS()">
-        {{ calling ? Message : 'Abrir' }}
-      </button>
+      <div *ngSwitchCase="'pendiente'" class="estado-container pendiente">
+        <ion-icon name="hourglass-outline"></ion-icon>
+        <h2>Solicitud Pendiente</h2>
+        <p>{{ statusMessage || 'Tu cuenta está pendiente de aprobación o no tienes acceso activo.' }}</p>
+        <p *ngIf="!statusMessage">Serás notificado cuando tengas acceso.</p>
+      </div>
 
-      <p class="status">{{ statusMessage }}</p>
+       <div *ngSwitchCase="'incompleto'" class="estado-container pendiente">
+        <ion-icon name="person-outline"></ion-icon>
+        <h2>Perfil Incompleto</h2>
+        <p>Necesitas completar tu perfil para continuar.</p>
+        <ion-button routerLink="/completar-perfil">Ir a Completar Perfil</ion-button>
+      </div>
 
-      <div class="context-container ion-padding-top"> <div *ngIf="condominioSeleccionado" class="context-display">
-          <p>Actuando en:</p>
-          <h2>{{ condominioSeleccionado.nombre }}</h2>
-          <ion-button fill="clear" size="small" (click)="cambiarCondominio()" *ngIf="misCondominiosCompletos.length > 1">
-            Cambiar de condominio
-          </ion-button>
-        </div>
+      <div *ngSwitchCase="'aprobado'" class="aprobado-container">
 
-        <div *ngIf="patenteSeleccionada" class="patente-display">
-          <p>Vehículo seleccionado:</p>
-          <h2>{{ patenteSeleccionada }}</h2>
-          <ion-button fill="clear" size="small" (click)="cambiarPatente()" *ngIf="(userProfile?.patentes?.length || 0) + (userProfile?.patente ? 1 : 0) > 1">
-            Cambiar de patente
-          </ion-button>
-        </div>
+          <b>Presione para activar</b>
 
-        <div *ngIf="!cargandoPerfil && (!patenteSeleccionada || !condominioSeleccionado)" class="missing-info ion-padding">
-           <p>⚠️ {{ statusMessage || 'Se requiere seleccionar condominio y patente.' }}</p>
-        </div>
+          <button
+            class="material-button"
+            [style.background-color]="buttonColor"
+            [disabled]="calling || !patenteSeleccionada || !condominioSeleccionado"
+            (click)="enviarSMS()">
+            {{ calling ? Message : 'Abrir' }}
+          </button>
 
-      </div> </ng-container> </div> </ion-content>
+          <p class="status">{{ statusMessage }}</p>
+
+          <div class="context-container ion-padding-top" *ngIf="condominioSeleccionado || patenteSeleccionada">
+
+            <div *ngIf="condominioSeleccionado" class="context-display">
+              <p>Actuando en:</p>
+              <h2>{{ condominioSeleccionado.nombre }}</h2>
+              <ion-button fill="clear" size="small" (click)="cambiarCondominio()" *ngIf="misCondominiosCompletos && misCondominiosCompletos.length > 1">
+                Cambiar de condominio
+              </ion-button>
+            </div>
+
+            <div *ngIf="patenteSeleccionada" class="patente-display">
+              <p>Vehículo seleccionado:</p>
+              <h2>{{ patenteSeleccionada }}</h2>
+              <ion-button fill="clear" size="small" (click)="cambiarPatente()" *ngIf="userProfile?.patentes?.length > 1">
+                Cambiar de patente
+              </ion-button>
+            </div>
+
+          </div> <div *ngIf="!cargandoPerfil && (!patenteSeleccionada || !condominioSeleccionado)" class="missing-info ion-padding">
+                <p>⚠️ Esperando selección...</p>
+          </div>
+
+      </div>
+     </div>
+     </div> 
+    </ion-content>

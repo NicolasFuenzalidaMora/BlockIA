@@ -15,52 +15,39 @@ export class AuthGuard implements CanActivate {
     private router: Router
   ) {}
 
-  canActivate(
-    _route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> {
+canActivate(
+  _route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+): Observable<boolean | UrlTree> {
 
-    return this.auth.user$.pipe(
-      // Evita depender de un flag externo; espera a que user$ tenga valor (null o usuario)
-      filter(u => u !== undefined), // si tu stream arranca en undefined
+  return this.auth.authReady$.pipe(
+    filter(ready => ready), // Espera hasta que Firebase termine la inicialización
+    take(1),
+    switchMap(() => this.auth.user$.pipe(
       take(1),
-
       switchMap(user => {
-        // A. No autenticado → enviar a login con retorno
         if (!user) {
-          return of(
-            this.router.createUrlTree(
-              ['/login-phone'],
-              { queryParams: { redirectTo: state.url } }
-            )
-          );
+          // No logueado → login
+          return of(this.router.createUrlTree(
+            ['/login-phone'],
+            { queryParams: { redirectTo: state.url } }
+          ));
         }
 
-        // B. Autenticado → verifica perfil en Firestore
-        return from(this.bf.getUserById(user.uid)).pipe(
-          map((userData: any) => {
-            const completo = !!(userData && userData.perfilCompleto);
-
-            // Permite entrar a /completar-perfil si el perfil NO está completo,
-            // para evitar bucles si esa ruta también pasa por el guard.
-            if (!completo) {
-              // Si ya vamos hacia /completar-perfil, deja pasar
-              if (state.url.startsWith('/completar-perfil')) {
-                return true;
-              }
-              // Si no, redirige allí
-              return this.router.createUrlTree(['/completar-perfil']);
-            }
-
-            // Perfil ok → acceso
-            return true;
-          }),
-          // Fallo de red/permisos → envía a completar-perfil (sin navigate)
-          catchError(() =>
-            of(this.router.createUrlTree(['/completar-perfil']))
-          )
-        );
+        // Logueado → verifica perfil
+return from(this.bf.getUserById(user.uid)).pipe(
+  map(userData => {
+    const data: any = userData; // 👈 Fuerza el tipo
+    const completo = !!(data && data.perfilCompleto);
+    if (!completo) {
+      if (state.url.startsWith('/completar-perfil')) return true;
+      return this.router.createUrlTree(['/completar-perfil']);
+    }
+    return true;
+  }),
+  catchError(() => of(this.router.createUrlTree(['/completar-perfil'])))
+);
       })
-    );
-  }
-}
+    ))
+  );
+}}

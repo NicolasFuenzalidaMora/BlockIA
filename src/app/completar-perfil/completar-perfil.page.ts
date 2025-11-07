@@ -1,4 +1,4 @@
-// En: src/app/completar-perfil/completar-perfil.page.ts
+// Ruta: src/app/completar-perfil/completar-perfil.page.ts
 
 import { deleteField } from '@angular/fire/firestore';
 import { Component, OnInit } from '@angular/core';
@@ -9,12 +9,12 @@ import { AlertController, ToastController } from '@ionic/angular';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { addIcons } from 'ionicons'; // Importar addIcons
-import { addCircle, trash } from 'ionicons/icons'; // Importar los iconos necesarios
+import { addIcons } from 'ionicons';
+import { addCircle, trash } from 'ionicons/icons';
 
 @Component({
   selector: 'app-completar-perfil',
-  templateUrl: './completar-perfil.page.html', // Corresponde al HTML con arrays
+  templateUrl: './completar-perfil.page.html',
   styleUrls: ['./completar-perfil.page.scss'],
   standalone: true,
   imports: [IonicModule, FormsModule, CommonModule]
@@ -22,14 +22,14 @@ import { addCircle, trash } from 'ionicons/icons'; // Importar los iconos necesa
 export class CompletarPerfilPage implements OnInit {
 
   nombreCompleto: string = '';
-
-  // ✅ Propiedades CORRECTAS para manejar arrays
   patenteActual: string = '';
   patentesAgregadas: string[] = [];
   condominiosSeleccionados: string[] = []; // Array de IDs
-
+  departamento: string = ''; // <-- MANTENIDO
+  
   condominios: any[] = [];
   userId: string | null = null;
+  userPhone: string | null = null; // <-- Necesario para la solicitud
   cargando = true;
 
   constructor(
@@ -39,7 +39,6 @@ export class CompletarPerfilPage implements OnInit {
     private alertController: AlertController,
     private toastCtrl: ToastController
   ) {
-    // Registrar iconos para el HTML
     addIcons({ addCircle, trash });
   }
 
@@ -47,6 +46,7 @@ export class CompletarPerfilPage implements OnInit {
     const user = this.auth.currentUser;
     if (user) {
       this.userId = user.uid;
+      this.userPhone = user.phoneNumber; // <-- Guardamos el teléfono
       this.cargarCondominios();
     } else {
       this.router.navigate(['/login-phone']);
@@ -66,38 +66,25 @@ export class CompletarPerfilPage implements OnInit {
     }
   }
 
-  // ✅ Funciones CORRECTAS para manejar arrays
-// ✅ FUNCIÓN CON VALIDACIÓN DE PATENTE CORRECTA
+  // ... (agregarPatente y eliminarPatente se quedan igual) ...
   agregarPatente() {
     if (this.patenteActual.trim() === '') {
-      return; // No agregar patentes vacías
+      return;
     }
-
     const patenteInput = this.patenteActual.toUpperCase().trim();
-
-    // --- Validación con Expresiones Regulares ---
-    // Formato Auto: 4 letras seguidas de 2 números
     const formatoAuto = /^[A-Z]{4}\d{2}$/;
-    // Formato Moto: 3 letras seguidas de 3 números, el primero SIEMPRE 0
     const formatoMoto = /^[A-Z]{3}0\d{2}$/;
 
-    // Verificamos si cumple alguno de los dos formatos
     if (!formatoAuto.test(patenteInput) && !formatoMoto.test(patenteInput)) {
-      // Si no cumple ninguno, mostramos error y detenemos
       this.presentToast('Formato de patente inválido. Use AAAA11 o AAA011.', 'warning');
-      return; // Detiene la función aquí si el formato es inválido
+      return;
     }
-
-    // Si el formato es válido, la agregamos (si no está ya en la lista)
     if (!this.patentesAgregadas.includes(patenteInput)) {
       this.patentesAgregadas.push(patenteInput);
-      console.log('Patente agregada:', patenteInput, ' | Array actual:', this.patentesAgregadas);
     } else {
-       console.log('Patente ya existe:', patenteInput);
        this.presentToast('Esa patente ya ha sido agregada.', 'warning');
     }
-
-    this.patenteActual = ''; // Limpiar el input después de agregar o si ya existía
+    this.patenteActual = '';
   }
 
   eliminarPatente(index: number) {
@@ -108,34 +95,59 @@ export class CompletarPerfilPage implements OnInit {
     console.log('Condominios seleccionados:', event.detail.value);
   }
 
-  async guardarPerfil() {
+  // ✅ [MODIFICADO] Lógica para enviar solicitud
+  async enviarSolicitud() {
     if (!this.userId) return;
     if (this.patenteActual.trim() !== '') {
       this.agregarPatente();
+      if (this.patenteActual.trim() !== '') return; // Falló la validación de patente
     }
-    if (!this.nombreCompleto || this.patentesAgregadas.length === 0 || this.condominiosSeleccionados.length === 0) {
-      this.presentToast('Por favor, completa nombre y agrega al menos una patente y condominio.', 'warning');
+    if (!this.nombreCompleto || this.patentesAgregadas.length === 0 || this.condominiosSeleccionados.length === 0 || !this.departamento) {
+      this.presentToast('Por favor, completa nombre, depto. y agrega al menos una patente y condominio.', 'warning');
       return;
     }
 
-    const datosParaActualizar = {
-      nombre: this.nombreCompleto,
-      patentes: this.patentesAgregadas, // Array
-      condominios: this.condominiosSeleccionados.map(id => ({ id: id, rol: 'RESIDENTE' })), // Array
-      perfilCompleto: true,
-      patente: deleteField(), // Borrar campo viejo
-      condominioId: deleteField() // Borrar campo viejo
-      // rol: deleteField() // Descomenta si necesitas borrar 'rol'
-    };
+    this.cargando = true;
 
     try {
-      console.log('DATOS A GUARDAR:', JSON.stringify(datosParaActualizar, null, 2));
+      // 1. Actualiza el perfil del usuario (sin condominios)
+      const datosParaActualizar = {
+        nombre: this.nombreCompleto,
+        patentes: this.patentesAgregadas,
+        departamento: this.departamento, // Guarda el depto en la raíz
+        perfilCompleto: true,
+        patente: deleteField(), // Borrar campo viejo
+        condominioId: deleteField() // Borrar campo viejo
+      };
+      console.log('Actualizando perfil de usuario:', datosParaActualizar);
       await this.bf.updateUser(this.userId, datosParaActualizar);
+
+      // 2. Crea una solicitud por cada condominio seleccionado
+      const promesasSolicitudes = this.condominiosSeleccionados.map(condoId => {
+        const solicitudData = {
+          userId: this.userId,
+          nombreUsuario: this.nombreCompleto,
+          telefonoUsuario: this.userPhone,
+          patentes: this.patentesAgregadas,
+          condominioId: condoId,
+          departamento: this.departamento
+        };
+        console.log('Creando solicitud:', solicitudData);
+        return this.bf.crearSolicitudDeAcceso(solicitudData);
+      });
+      
+      await Promise.all(promesasSolicitudes);
+
+      // 3. Forzar refresco y navegar
       await this.auth.forceProfileRefresh();
+      await this.mostrarAlertaExito(); // Mostrar pop-up
       this.router.navigate(['/home'], { replaceUrl: true });
+
     } catch (error) {
-      console.error("Error al actualizar perfil:", error);
+      console.error("Error al enviar solicitud:", error);
       this.mostrarAlertaError();
+    } finally {
+      this.cargando = false;
     }
   }
 
@@ -147,6 +159,16 @@ export class CompletarPerfilPage implements OnInit {
   async mostrarAlertaError() {
     const alert = await this.alertController.create({
       header: 'Error', message: 'No se pudo guardar tu información.', buttons: ['OK'],
+    });
+    await alert.present();
+  }
+
+  // ✅ NUEVO: Alerta de éxito
+  async mostrarAlertaExito() {
+    const alert = await this.alertController.create({
+      header: '¡Solicitud Enviada!',
+      message: 'Tu solicitud de acceso ha sido enviada. Serás notificado cuando el administrador la apruebe.',
+      buttons: ['OK'],
     });
     await alert.present();
   }

@@ -1,5 +1,5 @@
 {
-  "name": "BlockIA",
+  "name": "block.ia",
   "version": "0.0.1",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
@@ -28,6 +28,7 @@
     "@awesome-cordova-plugins/contacts": "^8.1.0",
     "@awesome-cordova-plugins/sms": "^8.1.0",
     "@capacitor-community/contacts": "^7.0.0",
+    "@capacitor-firebase/authentication": "^7.3.1",
     "@capacitor/android": "^7.4.3",
     "@capacitor/app": "7.0.2",
     "@capacitor/camera": "^7.0.2",
