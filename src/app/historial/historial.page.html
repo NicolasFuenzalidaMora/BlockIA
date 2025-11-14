@@ -1,48 +1,74 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button menu="first"></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Historial de Accesos</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="historial-content">
 
-<ion-content class="ion-padding">
+  <div class="historial-sheet ion-padding">
 
-  <div *ngIf="cargando" class="ion-text-center">
-    <ion-spinner></ion-spinner>
-    <p>Cargando historial...</p>
+    <!-- ENCABEZADO -->
+    <section class="header-block">
+      <h1>Historial</h1>
+      <p>Tus accesos se registran aquí.</p>
+    </section>
+
+    <!-- ESTADO CARGANDO -->
+    <div *ngIf="cargando" class="loading-block">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando historial...</p>
+    </div>
+
+    <!-- ESTADO VACÍO -->
+    <section *ngIf="!cargando && historial.length === 0" class="empty-block">
+      <div class="empty-icon">
+        <ion-icon name="time-outline"></ion-icon>
+      </div>
+      <h2>Sin accesos aún</h2>
+      <p>Cuando utilices la app para abrir el portón, aparecerán aquí.</p>
+    </section>
+
+    <!-- LISTA DE ACCESOS -->
+    <section *ngIf="!cargando && historial.length > 0" class="historial-list">
+      <div class="access-card" *ngFor="let r of historial">
+
+        <!-- Encabezado de tarjeta -->
+        <div class="card-head">
+          <div class="patente-circle">
+            {{ (r.patente || '---') | slice:0:3 }}
+          </div>
+
+          <div class="head-info">
+            <h3>{{ r.patente || 'Patente no registrada' }}</h3>
+            <p class="user-name">{{ r.nombreUsuario || 'Yo' }}</p>
+          </div>
+        </div>
+
+        <!-- Detalles de acceso -->
+        <div class="card-body">
+
+          <div class="info-row">
+            <ion-icon name="business-outline"></ion-icon>
+            <div>
+              <p class="label">Condominio</p>
+              <p class="value">{{ r.nombreCondominio }}</p>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <ion-icon name="time-outline"></ion-icon>
+            <div>
+              <p class="label">Fecha</p>
+              <p class="value">
+                {{ r.hora.toDate() | localDate }}
+                a las
+                {{ r.hora.toDate() | localDate:'short' }}
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
   </div>
 
-  <div *ngIf="!cargando && historial.length === 0" class="ion-text-center">
-    <ion-icon name="document-text-outline" style="font-size: 4em;"></ion-icon>
-    <p>No hay registros de acceso para mostrar.</p>
-  </div>
-
-  <ion-list *ngIf="!cargando && historial.length > 0">
-    <ion-card *ngFor="let registro of historial">
-      <ion-card-header>
-        <ion-card-title>{{ registro.patente || 'Patente no registrada' }}</ion-card-title>
-        <ion-card-subtitle>{{ registro.nombreUsuario }}</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-item lines="none">
-          <ion-icon name="business-outline" slot="start" color="medium"></ion-icon>
-          <ion-label>
-            <h2>{{ registro.nombreCondominio }}</h2>
-            <p>{{ registro.direccionCondominio }}</p>
-          </ion-label>
-        </ion-item>
-        
-        <ion-item lines="none">
-          <ion-icon name="time-outline" slot="start" color="medium"></ion-icon>
-          <ion-label>
-            <p>{{ registro.hora.toDate() | localDate }} a las {{ registro.hora.toDate() | localDate:'short' }}</p>
-          </ion-label>
-        </ion-item>
-        
-      </ion-card-content>
-    </ion-card>
-  </ion-list>
-  
+  <!-- Barra inferior -->
+  <app-menu-lateral></app-menu-lateral>
 </ion-content>

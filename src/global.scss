@@ -1,12 +1,6 @@
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
  */
 
 /* Core CSS required for Ionic components to work properly */
@@ -25,13 +19,109 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
+/* ⚠️ IMPORTANTE: desactivamos el tema oscuro automático */
+ /* @import '@ionic/angular/css/palettes/dark.always.css'; */
+ /* @import '@ionic/angular/css/palettes/dark.class.css'; */
+ /* @import '@ionic/angular/css/palettes/dark.system.css'; */
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* Forzamos esquema de color claro en toda la app */
+html,
+body {
+  color-scheme: light;
+}
+
+/* ---------------- ESTILO GLOBAL PARA LOS ALERTS (ion-alert) ---------------- */
+
+ion-alert.blockia-alert {
+  /* Fondo y texto del cuadro */
+  --background: #ffffff;
+  --ion-text-color: #0f172a;
+
+  /* Backdrop semitransparente */
+  --backdrop-opacity: 0.35;
+
+  /* Color de botones */
+  --button-color: #3b6ef6;
+  --button-color-activated: #1d4ed8;
+  --button-color-focused: #1d4ed8;
+
+  /* Borde / sombras del wrapper */
+  --border-radius: 18px;
+  --box-shadow:
+    0 24px 60px rgba(15, 23, 42, 0.35),
+    0 10px 30px rgba(59, 110, 246, 0.25);
+}
+
+/* Afinamos un poco tipografías internas del alert */
+ion-alert.blockia-alert::part(title) {
+  font-weight: 800;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+ion-alert.blockia-alert::part(message) {
+  font-size: 14px;
+  color: #4b5563;
+}
+
+/* Botones del alert */
+ion-alert.blockia-alert::part(button) {
+  font-weight: 700;
+  border-radius: 12px;
+}
+
+ion-alert.blockia-alert::part(button-group) {
+  padding: 10px 14px 14px;
+}
+
+/* ---- Modal Editar Perfil (BlockIA) ---- */
+
+.blockia-edit-profile-modal {
+  /* tamaño y backdrop */
+  --backdrop-opacity: 0.35;
+  --width: min(560px, 96vw);
+  --height: auto;
+  --max-height: 90vh;
+}
+
+.blockia-edit-profile-modal .modal-wrapper {
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow:
+    0 24px 60px rgba(15, 23, 42, 0.35),
+    0 10px 30px rgba(59, 110, 246, 0.28);
+}
+
+/* Header del modal: más parecido a las tarjetas de la app */
+.blockia-edit-profile-modal ion-header ion-toolbar {
+  --background: #f3f6fd;
+  --color: #0f172a;
+  --border-color: transparent;
+  box-shadow: none;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.blockia-edit-profile-modal ion-title {
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+/* Contenido del modal */
+.blockia-edit-profile-modal ion-content {
+  --background: #f9fbff;
+}
+
+/* Avatar centrado y con sombra suave (por si no lo tenías ya en el componente) */
+.blockia-edit-profile-modal ion-avatar {
+  box-shadow:
+    0 18px 40px rgba(15, 23, 42, 0.18),
+    0 0 0 6px rgba(59, 110, 246, 0.12);
+}
+
+/* Botón principal dentro del modal (guardar cambios) */
+.blockia-edit-profile-modal ion-button {
+  --border-radius: 18px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  font-weight: 700;
+}

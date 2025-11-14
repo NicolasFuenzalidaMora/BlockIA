@@ -1,0 +1,70 @@
+/* Barra inferior fija, estilo BlockIA */
+
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  z-index: 20;
+}
+
+.bottom-nav-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 6px 12px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+/* Cada ítem */
+.nav-item {
+  flex: 1 1 0;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 4px;
+  border-radius: 999px;
+  transition:
+    color 0.18s ease-out,
+    background-color 0.18s ease-out,
+    transform 0.12s ease-out;
+}
+
+.nav-item ion-icon {
+  font-size: 20px;
+  margin-bottom: 1px;
+}
+
+/* Estado activo (routerLinkActive añade esta clase) */
+.nav-item--active {
+  color: #1d4ed8;
+  background: rgba(59, 110, 246, 0.08);
+  transform: translateY(-1px);
+
+  ion-icon {
+    color: #1d4ed8;
+  }
+}
+
+/* En pantallas muy pequeñas */
+@media (max-width: 380px) {
+  .bottom-nav-inner {
+    padding-inline: 6px;
+  }
+  .nav-item {
+    font-size: 10px;
+  }
+  .nav-item ion-icon {
+    font-size: 18px;
+  }
+}

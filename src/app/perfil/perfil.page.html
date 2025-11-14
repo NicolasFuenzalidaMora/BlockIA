@@ -1,59 +1,119 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button menu="first"></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Perfil</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- Perfil en estilo tarjeta centrada + barra inferior reutilizable -->
 
-<ion-content class="ion-padding">
+<ion-content [fullscreen]="true" class="perfil-content">
 
-  <div *ngIf="cargando" class="ion-text-center">
-    <ion-spinner></ion-spinner>
-    <p>Cargando perfil...</p>
-  </div>
+  <div class="perfil-sheet ion-padding">
 
-  <div *ngIf="!cargando && userProfile">
-    <ion-card>
-      <ion-card-content class="ion-text-center">
-        <ion-avatar style="margin: auto; width: 100px; height: 100px;">
-          <img [src]="userProfile.fotoUrl || 'https://ionicframework.com/docs/img/demos/avatar.svg'" alt="Foto de usuario" />
-        </ion-avatar>
+    <!-- ESTADO: CARGANDO -->
+    <div *ngIf="cargando" class="perfil-loading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando perfil...</p>
+    </div>
 
-        <h2>{{ userProfile.nombre }}</h2>
-        <p>{{ userProfile.nombreCondominio }}</p>
+    <!-- ESTADO: PERFIL CARGADO -->
+    <ng-container *ngIf="!cargando && userProfile">
 
-        <p *ngIf="userProfile.departamento">
-          <ion-icon name="home-outline" slot="start"></ion-icon>
-          Depto / Casa: {{ userProfile.departamento }}
-        </p>
+      <section class="perfil-card">
 
-        <div *ngIf="userProfile.patentes && userProfile.patentes.length > 0">
-          <ion-chip outline="true">
-            <ion-icon name="car-sport-outline"></ion-icon>
-            <ion-label>{{ userProfile.patentes[0] }}</ion-label>
-            <ion-label *ngIf="userProfile.patentes.length > 1" style="margin-left: 4px;"><b>+</b></ion-label>
-          </ion-chip>
+        <!-- Avatar + nombre + teléfono -->
+        <div class="perfil-avatar">
+          <div class="avatar-ring">
+            <ion-avatar class="avatar-img">
+              <img
+                [src]="userProfile.fotoUrl || 'https://ionicframework.com/docs/img/demos/avatar.svg'"
+                alt="Foto de usuario" />
+            </ion-avatar>
+          </div>
+
+          <h2 class="perfil-name">{{ userProfile.nombre || 'Usuario' }}</h2>
+
+          <p class="perfil-phone">
+            {{ userProfile.telefono || userProfile.phone || userProfile.telefonoUsuario || '' }}
+          </p>
         </div>
-        
-        <ion-chip outline="true" color="primary">
-          <ion-label>{{ userProfile.rol }}</ion-label>
-        </ion-chip>
-      </ion-card-content>
-    </ion-card>
 
-    <ion-button expand="block" color="medium" (click)="editarPerfil()">
-      ✏️ Editar Perfil
-    </ion-button>
+        <!-- Bloques de información -->
+        <div class="perfil-info">
 
-    <ion-button expand="block" color="danger" (click)="logout()">
-      Cerrar sesión
-    </ion-button>
+          <!-- Condominio -->
+          <div class="info-row">
+            <div class="info-icon">
+              <ion-icon name="business-outline"></ion-icon>
+            </div>
+            <div class="info-body">
+              <p class="info-label">CONDOMINIO</p>
+              <p class="info-value">
+                {{ userProfile.nombreCondominio || 'Sin condominio asignado' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Departamento / Casa -->
+          <div class="info-row">
+            <div class="info-icon">
+              <ion-icon name="home-outline"></ion-icon>
+            </div>
+            <div class="info-body">
+              <p class="info-label">DEPARTAMENTO / CASA</p>
+              <p class="info-value">
+                {{ userProfile.departamento || userProfile.departamentoCasa || '-' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Patentes asociadas -->
+          <div class="info-row">
+            <div class="info-icon">
+              <ion-icon name="car-sport-outline"></ion-icon>
+            </div>
+            <div class="info-body">
+              <p class="info-label">PATENTES ASOCIADAS</p>
+
+              <p class="info-value" *ngIf="userProfile.patentes?.length; else sinPatentes">
+                <span
+                  class="plate-tag"
+                  *ngFor="let p of userProfile.patentes; let i = index">
+                  {{ p }}
+                </span>
+              </p>
+
+              <ng-template #sinPatentes>
+                <p class="info-value info-value--muted">
+                  Sin patentes registradas
+                </p>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="perfil-actions">
+          <ion-button expand="block" class="perfil-btn-primary" (click)="editarPerfil()">
+            <ion-icon slot="start" name="create-outline"></ion-icon>
+            EDITAR PERFIL
+          </ion-button>
+
+          <ion-button
+            expand="block"
+            fill="clear"
+            class="perfil-btn-logout"
+            (click)="logout()">
+            <ion-icon slot="start" name="log-out-outline"></ion-icon>
+            CERRAR SESIÓN
+          </ion-button>
+        </div>
+
+      </section>
+    </ng-container>
+
+    <!-- ESTADO: SIN PERFIL -->
+    <div *ngIf="!cargando && !userProfile" class="perfil-empty">
+      <ion-icon name="person-circle-outline"></ion-icon>
+      <p>No se pudo cargar la información del perfil.</p>
+    </div>
+
   </div>
 
-  <div *ngIf="!cargando && !userProfile" class="ion-text-center">
-    <p>No se pudo cargar la información del perfil.</p>
-  </div>
-
+  <!-- Barra inferior de navegación tipo app móvil -->
+  <app-menu-lateral></app-menu-lateral>
 </ion-content>

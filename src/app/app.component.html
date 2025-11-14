@@ -1,5 +1,5 @@
 <ion-app>
-  <!-- Menú lateral -->
+  <!-- Menú lateral (sigue existiendo, pero el logout ya no está aquí) -->
   <ion-menu side="start" menuId="first" contentId="main-content">
     <ion-header>
       <ion-toolbar color="primary">
@@ -13,5 +13,32 @@
   </ion-menu>
 
   <!-- Contenido principal -->
-  <ion-router-outlet id="main-content"></ion-router-outlet>
+  <div id="main-content" class="app-shell">
+    <!-- Botón flotante de logout (solo si hay usuario logueado) -->
+    <div class="logout-fab-wrapper" *ngIf="(auth.user$ | async)">
+      <ion-button
+        fill="clear"
+        size="small"
+        class="logout-fab"
+        (click)="logout()"
+      >
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <ion-router-outlet></ion-router-outlet>
+  </div>
 </ion-app>
+
+<!-- Contenedor persistente para reCAPTCHA -->
+<div
+  id="recaptcha-container"
+  style="
+    position: fixed;
+    left: -9999px;
+    top: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  "
+></div>

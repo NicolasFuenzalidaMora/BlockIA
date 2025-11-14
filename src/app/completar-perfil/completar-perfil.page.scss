@@ -1,113 +1,268 @@
-/* En completar-perfil.page.scss */
+/* ===== Fondo general (coherente con Login) ===== */
+.cp-content {
+  --background: #F3F6FD;
+}
 
-ion-content {
-  --background: #22223b;
+/* ===== Lienzo a pantalla completa (centra verticalmente) ===== */
+.sheet {
+  min-height: 100dvh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  padding: clamp(14px, 3vh, 24px) 16px calc(env(safe-area-inset-bottom) + 16px);
 }
+.flex-spacer { flex: 1 1 auto; }
 
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start; // Alinea arriba
+/* ===== Encabezado superior ===== */
+.cp-header {
+  --background: transparent;
   text-align: center;
-  font-family: 'Unbounded', sans-serif;
-  padding: 16px;
-  box-sizing: border-box;
-  flex-grow: 1;
-  overflow-y: auto; // Scroll SÓLO si es necesario
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: 4px;
+}
+.cp-step {
+  width: min(680px, 92%);
+  margin: 10px auto 14px;
+  font-size: 13px;
+  color: #6b7280;
+}
+.cp-progress {
   width: 100%;
+  height: 4px;
+  background: #E6EBF8;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 8px;
 }
-
-b { // Título "¡Bienvenido a Blockia!"
-  margin-bottom: 10px; // Menos margen que en visitas
-  font-size: 1.4rem; // Un poco más grande
-  color: #ffffff;
+.cp-bar {
   width: 100%;
-  text-align: center;
-  font-weight: 600;
+  height: 100%;
+  background: #3B6EF6;
+  transform-origin: left center;
+  transform: scaleX(1); /* Paso 2 de 2 => 100% */
+}
+.cp-title {
+  margin: 2px 0 6px;
+  font-size: clamp(22px, 3.8vw, 28px);
+  font-weight: 800;
+  color: #0f172a;
+}
+.cp-sub {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #6b7280;
 }
 
-.info-text { // Párrafo de introducción
-  color: #d0d0d0; // Un poco más tenue
-  margin-bottom: 25px; // Más espacio después
-  font-size: 0.95rem;
-  text-align: center;
-  width: 100%;
+/* ===== Tarjeta del formulario ===== */
+.form-card {
+  width: min(680px, 92%);
+  margin-inline: auto;
+  background: #ffffff;
+  border: 1px solid #E6EBF8;
+  border-radius: 18px;
+  box-shadow:
+    0 18px 38px rgba(15, 23, 42, 0.08),
+    0 8px 18px rgba(59, 110, 246, 0.06);
+  padding: clamp(12px, 1.6vh, 18px);
 }
 
-// Estilos generales para los items del formulario
-ion-item {
-  --background: #3e3e5a;
-  --color: #ffffff;
-  margin-top: 15px; // Más espacio entre items
-  border-radius: 8px;
-  --border-color: transparent;
-  --highlight-color-focused: var(--ion-color-primary);
-  --inner-padding-end: 8px; // Ajustar padding interno
+/* ===== Campos (ion-item) con icono real ===== */
+.block-input {
+  --background: #fff;
+  --border-radius: 16px;
+  --min-height: 58px;
+  --inner-padding-start: 10px;
+  --inner-padding-end: 8px;
 
-  ion-input, ion-select {
-    --color: #ffffff;
-    --placeholder-color: #bdbdd3;
-  }
-
-  ion-label[position="floating"], ion-label[position="stacked"] {
-    color: #bdbdd3;
-    font-size: 0.9rem;
-    font-weight: 500; // Un poco más grueso
-  }
-
-  // Estilo al enfocar o tener valor
-  &.item-has-focus ion-label[position="floating"],
-  &.item-has-value ion-label[position="floating"],
-  &.item-has-focus ion-label[position="stacked"],
-  &.item-has-value ion-label[position="stacked"] {
-    color: var(--ion-color-primary-tint);
-  }
-
-  // Botón '+' dentro del item de patente
-  ion-button[slot="end"] {
-      --padding-start: 0;
-      --padding-end: 0;
-      height: 30px; // Ajustar tamaño si es necesario
-      margin-inline-start: 8px;
-  }
-}
-
-// Estilos específicos para la lista de patentes agregadas
-.patentes-list {
-  background: transparent; // Sin fondo blanco
-  margin-top: 5px;
-  margin-bottom: 10px;
-  padding-left: 0; // Quitar padding izquierdo por defecto
-
-  ion-item {
-    --background: rgba(255, 255, 255, 0.1); // Fondo semitransparente para destacar
-    --min-height: 40px; // Más compacto
-    --inner-padding-start: 16px;
-     margin-top: 5px;
-
-    ion-label {
-      font-size: 0.9rem;
-      color: #e0e0e0; // Texto un poco más claro
-    }
-
-    ion-button { // Botón de borrar
-        height: 24px;
-        --padding-start: 4px;
-        --padding-end: 4px;
-    }
-  }
-}
-
-// Estilos para el botón principal
-ion-button[expand="block"] {
+  border: 1px solid #E6EBF8;
   border-radius: 16px;
-  margin-top: 30px; // Más espacio antes del botón principal
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  font-weight: bold;
-  --padding-top: 15px;
-  --padding-bottom: 15px;
-  text-transform: uppercase; // Mayúsculas
-  letter-spacing: 0.5px; // Espaciado
+  margin: 10px 0 12px;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+
+  /* Icono visible a la izquierda */
+  ion-icon[slot="start"] {
+    color: #3B6EF6;
+    font-size: 22px;
+    margin-left: 8px;
+    margin-right: 10px;
+    min-width: 22px;
+    opacity: 1;
+    pointer-events: none;
+    filter: drop-shadow(0 1px 0 rgba(59,110,246,.15));
+  }
+
+  /* Etiqueta */
+  ion-label {
+    color: #6b7280 !important;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  /* Entradas de texto y select */
+  ion-input,
+  ion-select {
+    --color: #0f172a;
+    color: #0f172a;
+    font-size: 1rem;
+  }
+
+  /* Estado foco/valor (borde y sombra sutil) */
+  &.item-has-focus,
+  &.item-has-value {
+    border-color: #cfd8fb;
+    box-shadow: 0 10px 22px rgba(59, 110, 246, 0.08);
+  }
+}
+
+/* Énfasis ligero extra para auto y edificio */
+.block-input ion-icon[name="car-sport-outline"],
+.block-input ion-icon[name="business-outline"] {
+  filter: drop-shadow(0 1px 0 rgba(59,110,246,.20));
+}
+
+/* ===== Select ===== */
+.block-select { --placeholder-opacity: 1; }
+
+/* flecha del select (parte proyectada por Ionic) */
+ion-select.block-select::part(icon) {
+  color: #9AA3B2;
+  opacity: 1;
+}
+
+/* Alinea el texto cuando hay icono al inicio */
+.block-input ion-select::part(text) { padding-left: 0; }
+
+/* ===== Botón principal ===== */
+.block-btn {
+  width: 100%;
+  height: 56px;
+  --background: #3B6EF6;
+  --background-activated: #2E5DEB;
+  --border-radius: 14px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  margin-top: 6px;
+  box-shadow: 0 22px 44px rgba(59, 110, 246, 0.25);
+}
+.block-btn[disabled],
+.block-btn.button-disabled {
+  --background: #a9b8f8;
+  box-shadow: none;
+}
+
+/* ===== Footer ===== */
+.cp-footer {
+  width: min(680px, 92%);
+  margin: 16px auto 0;
+  text-align: center;
+
+  p {
+    color: #6b7280;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  .link {
+    color: #3B6EF6;
+    font-weight: 700;
+    text-decoration: none;
+  }
+}
+
+/* ===== Modal (alert) del ion-select de condominios ===== */
+.condo-alert {
+  --background: #ffffff;
+  --backdrop-opacity: 0.35;
+  --max-width: 520px;
+  backdrop-filter: blur(4px);
+
+  .alert-wrapper {
+    border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.45);
+  }
+
+  .alert-head {
+    padding-bottom: 6px;
+
+    h2 {
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 16px;
+    }
+  }
+
+  .alert-radio-group { max-height: 50vh; }
+
+  .alert-radio-label {
+    color: #0f172a;
+    font-weight: 600;
+  }
+
+  .alert-button-group {
+    padding: 10px 14px 14px;
+
+    .alert-button {
+      border-radius: 12px;
+      font-weight: 700;
+
+      &.alert-button-role-cancel {
+        color: #6b7280;
+        background: transparent;
+      }
+
+      &:not(.alert-button-role-cancel) {
+        background: #3B6EF6;
+        color: #fff;
+      }
+    }
+  }
+}
+
+/* ===== Responsive fino ===== */
+@media (max-width: 380px) {
+  .form-card { padding: 10px; }
+  .block-btn { height: 54px; }
+}
+
+/* Asegura que los iconos del formulario siempre se vean */
+.block-input ion-icon[slot="start"] {
+  color: #3B6EF6 !important;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  margin-left: 8px;
+  margin-right: 10px;
+  opacity: 1 !important;
+  display: inline-block !important;
+  filter: drop-shadow(0 1px 0 rgba(59,110,246,.15));
+}
+
+/* Alineación vertical consistente del contenido del item */
+.block-input::part(native) {
+  align-items: flex-start; /* etiqueta stacked + input + icono */
+}
+
+/* Íconos de auto y edificio con un pelín más de énfasis */
+.block-input ion-icon[name="car-sport-outline"],
+.block-input ion-icon[name="business-outline"] {
+  filter: drop-shadow(0 1px 0 rgba(59,110,246,.20));
+}
+
+/* Texto de Términos y Privacidad */
+.terms-text {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-top: 16px;
+  margin-bottom: 4px;
+
+  .link {
+    color: #3B6EF6;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

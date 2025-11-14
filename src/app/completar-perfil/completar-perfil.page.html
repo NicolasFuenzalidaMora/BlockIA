@@ -1,63 +1,97 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Completa tu Perfil</ion-title>
-  </ion-toolbar>
+<ion-header class="cp-header">
+  <div class="cp-step">
+    <span>Paso 2 de 2</span>
+    <div class="cp-progress"><div class="cp-bar"></div></div>
+  </div>
+
+  <h1 class="cp-title">Completa tu perfil</h1>
+  <p class="cp-sub">Solo necesitamos unos datos más para activar tu cuenta.</p>
 </ion-header>
 
-<ion-content>
-  <div class="wrapper ion-padding">
-    <b>¡Bienvenido a Blockia!</b>
-    <p class="info-text"> Solo necesitamos unos datos más para activar tu cuenta. </p>
+<ion-content [fullscreen]="true" class="cp-content">
+  <!-- Lienzo que usa toda la altura útil y centra el contenido -->
+  <div class="sheet">
+    <div class="flex-spacer"></div>
 
-    <ion-item>
-        <ion-label position="floating">Nombre Completo</ion-label>
-        <ion-input type="text" [(ngModel)]="nombreCompleto" required></ion-input>
-    </ion-item>
+    <!-- Tarjeta del formulario -->
+    <section class="form-card">
 
-    <ion-item>
-        <ion-label position="floating">Patente (Ej: ABCD12)</ion-label>
-        <ion-input
-          type="text"
-          [(ngModel)]="patenteActual"
-          (keyup.enter)="agregarPatente()">
-        </ion-input>
-        <ion-button slot="end" fill="clear" (click)="agregarPatente()">
-          <ion-icon slot="icon-only" name="add-circle"></ion-icon>
-        </ion-button>
-    </ion-item>
+      <!-- Nombre Completo -->
+<ion-item lines="none" class="block-input">
+  <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+  <ion-label position="stacked">Nombre Completo</ion-label>
+  <ion-input
+    type="text"
+    [(ngModel)]="nombreCompleto"
+    placeholder="Ej: Juan Pérez"
+    required>
+  </ion-input>
+</ion-item>
 
-    <ion-list *ngIf="patentesAgregadas.length > 0" lines="none" class="patentes-list">
-      <ion-item *ngFor="let patente of patentesAgregadas; let i = index">
-          <ion-label>{{ patente }}</ion-label>
-          <ion-button slot="end" fill="clear" color="danger" size="small" (click)="eliminarPatente(i)">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
-          </ion-button>
-        </ion-item>
-    </ion-list>
+<!-- Patente -->
+<ion-item lines="none" class="block-input">
+  <ion-icon slot="start" name="car-sport-outline"></ion-icon>
+  <ion-label position="stacked">Patente (Ej: ABCD12)</ion-label>
+  <ion-input
+    type="text"
+    [(ngModel)]="patenteActual"
+    placeholder="ABC123 o ABCD12">
+  </ion-input>
+</ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">Condominio(s) a solicitar</ion-label>
-      <ion-select
-        [(ngModel)]="condominiosSeleccionados"
-        placeholder="Selecciona uno o más"
-        required
-        multiple="true">
-        <ion-select-option *ngFor="let condo of condominios" [value]="condo.id">
-          {{ condo.nombre }}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
+<!-- Condominio(s) a solicitar -->
+<ion-item lines="none" class="block-input">
+  <ion-icon slot="start" name="business-outline"></ion-icon>
+  <ion-label position="stacked">Condominio(s) a solicitar</ion-label>
+  <ion-select
+    [(ngModel)]="condominiosSeleccionados"
+    multiple="true"
+    interface="alert"
+    [interfaceOptions]="{ cssClass: 'condo-alert' }"
+    placeholder="Selecciona uno o más">
+    <ion-select-option *ngFor="let condo of condominios" [value]="condo.id">
+      {{ condo.nombre }}
+    </ion-select-option>
+  </ion-select>
+</ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Departamento / N° de Casa</ion-label>
-      <ion-input type="text" [(ngModel)]="departamento" required></ion-input>
-    </ion-item>
-    
-    <ion-button
-      expand="block"
-      (click)="enviarSolicitud()"
-      [disabled]="!nombreCompleto || patentesAgregadas.length === 0 || condominiosSeleccionados.length === 0 || !departamento">
-      Enviar Solicitud
-    </ion-button>
+<!-- Departamento / N° de Casa -->
+<ion-item lines="none" class="block-input">
+  <ion-icon slot="start" name="home-outline"></ion-icon>
+  <ion-label position="stacked">Departamento / N° de Casa</ion-label>
+  <ion-input
+    type="text"
+    [(ngModel)]="departamento"
+    placeholder="Ej: Depto. 501">
+  </ion-input>
+</ion-item>
+
+      <!-- Botón principal -->
+      <ion-button
+        expand="block"
+        class="block-btn"
+        (click)="enviarSolicitud()"
+        [disabled]="!nombreCompleto || !departamento || (!condominiosSeleccionados || condominiosSeleccionados.length === 0)">
+        ENVIAR SOLICITUD
+      </ion-button>
+    </section>
+
+    <!-- Texto de términos -->
+<p class="terms-text">
+  Al continuar, aceptas nuestros
+  <a href="#" class="link">Términos</a> y
+  <a href="#" class="link">Privacidad</a>.
+</p>
+
+    <div class="flex-spacer"></div>
+
+    <!-- Footer -->
+    <footer class="cp-footer">
+      <p>
+        Al continuar, aceptas nuestros
+        <a href="#" class="link">Términos</a> y
+        <a href="#" class="link">Privacidad</a>.
+      </p>
+    </footer>
   </div>
 </ion-content>

@@ -25,9 +25,9 @@ export class LoginPhonePage {
   constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit() {
-  console.log('[LOGIN] ngOnInit: initRecaptcha');
+  // Inicializa reCAPTCHA en el contenedor global persistente
   this.auth.initRecaptcha('recaptcha-container');
-  }
+}
 
 async enviarOTP() {
   this.error = '';

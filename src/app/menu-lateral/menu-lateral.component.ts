@@ -1,127 +1,125 @@
-// Ruta: src/app/components/menu-lateral/menu-lateral.component.ts
-// VERSIÓN CON TEMPLATE INLINE Y OPCIÓN ADMIN CONDICIONAL
+// Ruta: src/app/menu-lateral/menu-lateral.component.ts
+// BARRA INFERIOR TIPO TABS, REUTILIZABLE EN TODAS LAS VISTAS
 
 import { Component } from '@angular/core';
-import { IonicModule, MenuController } from '@ionic/angular';
-import { RouterModule } from '@angular/router';
-import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 import { addIcons } from 'ionicons';
 import {
-  homeOutline, peopleOutline, timeOutline, personOutline,
-  personCircleOutline, logOutOutline, logInOutline,
-  settingsOutline // <-- Importar el nuevo icono
+  homeOutline,
+  peopleOutline,
+  timeOutline,
+  personOutline,
+  settingsOutline,
 } from 'ionicons/icons';
 
 @Component({
   selector: 'app-menu-lateral',
   standalone: true,
-  imports: [IonicModule, RouterModule, CommonModule],
-  // Template inline con la nueva opción
+  imports: [
+    CommonModule,
+    IonicModule,
+    RouterModule,
+    RouterLink,
+    RouterLinkActive,
+  ],
   template: `
-    <ion-list>
-      <ion-item button routerLink="/home" routerDirection="root" (click)="closeMenu()">
-        <ion-icon name="home-outline" slot="start"></ion-icon>
-        <ion-label>Principal</ion-label>
-      </ion-item>
-      <ion-item button routerLink="/visitas" routerDirection="root" (click)="closeMenu()">
-        <ion-icon name="people-outline" slot="start"></ion-icon>
-        <ion-label>Visitas</ion-label>
-      </ion-item>
-      <ion-item button routerLink="/historial" routerDirection="root" (click)="closeMenu()">
-        <ion-icon name="time-outline" slot="start"></ion-icon>
-        <ion-label>Historial</ion-label>
-      </ion-item>
-      <ion-item button routerLink="/perfil" routerDirection="root" (click)="closeMenu()">
-        <ion-icon name="person-outline" slot="start"></ion-icon>
-        <ion-label>Perfil</ion-label>
-      </ion-item>
+    <nav class="bottom-nav">
+      <div class="bottom-nav-inner">
 
-      <ng-container *ngIf="auth.userProfile$ | async as profile">
-        <ion-item *ngIf="tienePermisosAdmin(profile)" button routerLink="/admin" routerDirection="root" (click)="closeMenu()">
-          <ion-icon name="settings-outline" slot="start"></ion-icon>
-          <ion-label>Administración</ion-label>
-        </ion-item>
-      </ng-container>
-      <ion-item-divider></ion-item-divider>
+        <!-- Inicio -->
+        <a
+          routerLink="/home"
+          routerLinkActive="nav-item--active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-item"
+        >
+          <ion-icon name="home-outline"></ion-icon>
+          <span>Inicio</span>
+        </a>
 
-      <ion-item button *ngIf="!(auth.userProfile$ | async)" routerLink="/login-phone" routerDirection="root" (click)="closeMenu()">
-        <ion-icon slot="start" name="log-in-outline"></ion-icon>
-        <ion-label>Iniciar sesión</ion-label>
-      </ion-item>
+        <!-- Visitas -->
+        <a
+          routerLink="/visitas"
+          routerLinkActive="nav-item--active"
+          class="nav-item"
+        >
+          <ion-icon name="people-outline"></ion-icon>
+          <span>Visitas</span>
+        </a>
 
-      <ion-item *ngIf="auth.userProfile$ | async as profile">
-        <ion-icon slot="start" name="person-circle-outline"></ion-icon>
-        <ion-label>
-          <h2>{{ profile.nombre || 'Usuario' }}</h2>
-          <p style="font-size: 0.8em; color: gray;">{{ profile.telefono || 'Sin teléfono' }}</p>
-        </ion-label>
-        <ion-button fill="clear" color="danger" (click)="logout()">
-            <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
-        </ion-button>
-      </ion-item>
+        <!-- Historial -->
+        <a
+          routerLink="/historial"
+          routerLinkActive="nav-item--active"
+          class="nav-item"
+        >
+          <ion-icon name="time-outline"></ion-icon>
+          <span>Historial</span>
+        </a>
 
-    </ion-list>
-  `
-  // No necesitamos styleUrls si no hay CSS específico aquí
+        <!-- Perfil -->
+        <a
+          routerLink="/perfil"
+          routerLinkActive="nav-item--active"
+          class="nav-item"
+        >
+          <ion-icon name="person-outline"></ion-icon>
+          <span>Perfil</span>
+        </a>
+
+        <!-- Admin solo si tiene permisos -->
+        <ng-container *ngIf="auth.userProfile$ | async as profile">
+          <a
+            *ngIf="tienePermisosAdmin(profile)"
+            routerLink="/admin"
+            routerLinkActive="nav-item--active"
+            class="nav-item"
+          >
+            <ion-icon name="settings-outline"></ion-icon>
+            <span>Admin</span>
+          </a>
+        </ng-container>
+
+      </div>
+    </nav>
+  `,
+  styleUrls: ['./menu-lateral.component.scss'],
 })
 export class MenuLateralComponent {
-  constructor(
-    public auth: AuthService,
-    private menu: MenuController
-  ) {
-    // Registramos TODOS los iconos necesarios
+  constructor(public auth: AuthService) {
     addIcons({
-      homeOutline, peopleOutline, timeOutline, personOutline,
-      personCircleOutline, logOutOutline, logInOutline,
-      settingsOutline // <-- Añadir icono al registro
+      homeOutline,
+      peopleOutline,
+      timeOutline,
+      personOutline,
+      settingsOutline,
     });
-  }
-
-  closeMenu() {
-    this.menu.close();
-  }
-
-  async logout() {
-    try {
-      await this.auth.logout();
-      this.menu.close();
-      // Opcional: Redirigir si es necesario
-      // import { Router } from '@angular/router';
-      // constructor(..., private router: Router) {}
-      // this.router.navigate(['/login-phone'], { replaceUrl: true });
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-    }
   }
 
   /**
    * Verifica si el perfil actual tiene permisos de Admin o Conserje.
-   * @param profile El objeto del perfil de usuario.
-   * @returns boolean True si tiene permisos, false si no.
    */
   tienePermisosAdmin(profile: any): boolean {
-    if (!profile) return false; // Sin perfil, sin permisos
+    if (!profile) return false;
 
     // Opción 1: Rol raíz es 'administrador'
     if (profile.rol === 'administrador') {
-      console.log("[MenuLateral] Permiso Admin: Rol raíz 'administrador'");
       return true;
     }
 
-    // Opción 2: Tiene rol 'administrador' o 'conserjeria' DENTRO del array condominios
+    // Opción 2: Rol 'administrador' o 'conserjeria' en alguno de los condominios
     if (Array.isArray(profile.condominios) && profile.condominios.length > 0) {
       const tieneRolAdminEnCondo = profile.condominios.some(
-          (c: any) => c.rol === 'administrador' || c.rol === 'conserjeria'
+        (c: any) => c.rol === 'administrador' || c.rol === 'conserjeria'
       );
       if (tieneRolAdminEnCondo) {
-          console.log("[MenuLateral] Permiso Admin: Rol 'administrador' o 'conserjeria' en array condominios");
-          return true;
+        return true;
       }
     }
-
-    // Si no cumple ninguna, no tiene permisos
-    console.log("[MenuLateral] Permiso Admin: Denegado");
     return false;
   }
 }

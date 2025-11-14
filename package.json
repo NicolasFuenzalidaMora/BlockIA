@@ -42,7 +42,7 @@
     "cordova-plugin-call-number": "^1.0.1",
     "cordova-plugin-contacts": "^3.0.1",
     "firebase": "^11.10.0",
-    "ionicons": "^7.0.0",
+    "ionicons": "^7.4.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "twilio": "^5.10.2",

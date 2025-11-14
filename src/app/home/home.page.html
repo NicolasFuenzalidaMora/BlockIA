@@ -1,78 +1,124 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button menu="first"></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Inicio</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- src/app/home/home.page.html -->
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="home-content">
 
+  <!-- Pull to refresh -->
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div class="wrapper ion-padding">
+  <div class="home-sheet ion-padding">
+    <div [ngSwitch]="estadoUsuario" class="home-switch">
 
-    <div [ngSwitch]="estadoUsuario" class="content-switch-container">
-
-      <div *ngSwitchCase="'cargando'" class="estado-container">
+      <!-- ESTADO: CARGANDO -->
+      <section *ngSwitchCase="'cargando'" class="state-card state-loading">
         <ion-spinner name="crescent"></ion-spinner>
         <p>Cargando tu información...</p>
-      </div>
+      </section>
 
-      <div *ngSwitchCase="'pendiente'" class="estado-container pendiente">
-        <ion-icon name="hourglass-outline"></ion-icon>
-        <h2>Solicitud Pendiente</h2>
-        <p>{{ statusMessage || 'Tu cuenta está pendiente de aprobación o no tienes acceso activo.' }}</p>
-        <p *ngIf="!statusMessage">Serás notificado cuando tengas acceso.</p>
-      </div>
+      <!-- ESTADO: PENDIENTE -->
+      <section *ngSwitchCase="'pendiente'" class="state-card state-pending">
+        <div class="state-icon">
+          <ion-icon name="hourglass-outline"></ion-icon>
+        </div>
+        <h2>Solicitud pendiente</h2>
+        <p class="main-text">
+          {{ statusMessage || 'Tu cuenta está pendiente de aprobación o no tienes acceso activo.' }}
+        </p>
+        <p class="sub-text" *ngIf="!statusMessage">
+          Serás notificado cuando tengas acceso.
+        </p>
+      </section>
 
-       <div *ngSwitchCase="'incompleto'" class="estado-container pendiente">
-        <ion-icon name="person-outline"></ion-icon>
-        <h2>Perfil Incompleto</h2>
-        <p>Necesitas completar tu perfil para continuar.</p>
-        <ion-button routerLink="/completar-perfil">Ir a Completar Perfil</ion-button>
-      </div>
+      <!-- ESTADO: PERFIL INCOMPLETO -->
+      <section *ngSwitchCase="'incompleto'" class="state-card state-pending">
+        <div class="state-icon">
+          <ion-icon name="person-outline"></ion-icon>
+        </div>
+        <h2>Perfil incompleto</h2>
+        <p class="main-text">
+          Necesitas completar tu perfil para continuar.
+        </p>
+        <ion-button routerLink="/completar-perfil" class="primary-btn">
+          Ir a completar perfil
+        </ion-button>
+      </section>
 
-      <div *ngSwitchCase="'aprobado'" class="aprobado-container">
+      <!-- ESTADO: APROBADO -->
+      <section *ngSwitchCase="'aprobado'" class="state-approved">
 
-          <b>Presione para activar</b>
+        <!-- Pill de estado del portón -->
+        <div class="status-pill" *ngIf="statusMessage">
+          <span class="dot" [class.ok]="statusMessage && statusMessage.toLowerCase().includes('abierto')"
+            [class.bad]="statusMessage && statusMessage.toLowerCase().includes('cerrado')">
+          </span>
+          <span class="pill-label">Estado del portón</span>
+        </div>
 
-          <button
-            class="material-button"
-            [style.background-color]="buttonColor"
-            [disabled]="calling || !patenteSeleccionada || !condominioSeleccionado"
-            (click)="enviarSMS()">
+        <!-- Botón grande circular -->
+        <button class="gate-button"
+          [class.gate-button-disabled]="calling || !patenteSeleccionada || !condominioSeleccionado"
+          [disabled]="calling || !patenteSeleccionada || !condominioSeleccionado" (click)="enviarSMS()">
+
+          <span class="gate-label">
             {{ calling ? Message : 'Abrir' }}
-          </button>
+          </span>
+          <span class="gate-sub" *ngIf="!calling">portón</span>
+        </button>
 
-          <p class="status">{{ statusMessage }}</p>
+        <!-- Mensaje de estado -->
+        <p class="status-text" *ngIf="statusMessage">
+          {{ statusMessage }}
+        </p>
 
-          <div class="context-container ion-padding-top" *ngIf="condominioSeleccionado || patenteSeleccionada">
+        <!-- CONTEXTO: Condominio / Vehículo -->
+        <div class="context-wrapper" *ngIf="condominioSeleccionado || patenteSeleccionada">
 
-            <div *ngIf="condominioSeleccionado" class="context-display">
-              <p>Actuando en:</p>
-              <h2>{{ condominioSeleccionado.nombre }}</h2>
-              <ion-button fill="clear" size="small" (click)="cambiarCondominio()" *ngIf="misCondominiosCompletos && misCondominiosCompletos.length > 1">
-                Cambiar de condominio
-              </ion-button>
+          <!-- Tarjeta de condominio: toda la tarjeta es clicable -->
+          <div *ngIf="condominioSeleccionado" class="context-card context-card--clickable"
+            (click)="cambiarCondominio()">
+            <div class="context-icon">
+              <ion-icon name="business-outline"></ion-icon>
             </div>
 
-            <div *ngIf="patenteSeleccionada" class="patente-display">
-              <p>Vehículo seleccionado:</p>
-              <h2>{{ patenteSeleccionada }}</h2>
-              <ion-button fill="clear" size="small" (click)="cambiarPatente()" *ngIf="userProfile?.patentes?.length > 1">
-                Cambiar de patente
-              </ion-button>
+            <div class="context-body">
+              <p class="context-label">Actuando en:</p>
+              <h3 class="context-title">{{ condominioSeleccionado.nombre }}</h3>
             </div>
 
-          </div> <div *ngIf="!cargandoPerfil && (!patenteSeleccionada || !condominioSeleccionado)" class="missing-info ion-padding">
-                <p>⚠️ Esperando selección...</p>
+            <!-- Sólo se ve si hay más de un condominio -->
+            <div class="context-right" *ngIf="misCondominiosCompletos && misCondominiosCompletos.length > 1">
+              <span class="context-action-label">Cambiar</span>
+            </div>
           </div>
 
-      </div>
-     </div>
-     </div> 
-    </ion-content>
+
+          <!-- Tarjeta de vehículo (igual que antes) -->
+          <div *ngIf="patenteSeleccionada" class="context-card">
+            <div class="context-icon">
+              <ion-icon name="car-sport-outline"></ion-icon>
+            </div>
+            <div class="context-body">
+              <p class="context-label">Vehículo seleccionado:</p>
+              <h3 class="context-title">{{ patenteSeleccionada }}</h3>
+            </div>
+            <ion-button fill="clear" size="small" class="context-action" (click)="cambiarPatente()"
+              *ngIf="userProfile?.patentes?.length > 1">
+              Cambiar
+            </ion-button>
+          </div>
+        </div>
+
+        <!-- Aviso si falta info -->
+        <div *ngIf="!cargandoPerfil && (!patenteSeleccionada || !condominioSeleccionado)" class="missing-info">
+          <p>⚠️ Esperando selección de condominio y vehículo para poder abrir el portón.</p>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Barra inferior de navegación reutilizable -->
+  <app-menu-lateral></app-menu-lateral>
+</ion-content>

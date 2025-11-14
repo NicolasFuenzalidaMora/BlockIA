@@ -1,7 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController, AlertController, ModalController } from '@ionic/angular';
+import {
+  IonicModule,
+  ToastController,
+  AlertController,
+  ModalController,
+} from '@ionic/angular';
 
 import { Subscription } from 'rxjs';
 import { Timestamp } from '@angular/fire/firestore';
@@ -12,12 +17,21 @@ import { AuthService } from 'src/app/services/auth.service';
 // Modal del historial
 import { HistorialInvitacionesComponent } from '../components/historial-invitaciones/historial-invitaciones.component';
 
+// Barra inferior reutilizable
+import { MenuLateralComponent } from '../menu-lateral/menu-lateral.component';
+
 @Component({
   standalone: true,
   selector: 'app-visitas',
   templateUrl: './visitas.page.html',
   styleUrls: ['./visitas.page.scss'],
-  imports: [CommonModule, FormsModule, IonicModule, HistorialInvitacionesComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    HistorialInvitacionesComponent,
+    MenuLateralComponent, // 👈 para <app-menu-lateral>
+  ],
 })
 export class VisitasPage implements OnInit, OnDestroy {
   visitaName = '';
@@ -42,16 +56,18 @@ export class VisitasPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.cargando = true;
-    this.profileSubscription = this.authService.userProfile$.subscribe(userData => {
-      if (!userData) {
-        this.cargando = false;
-        this.misCondominios = [];
-        this.condominioSeleccionado = null;
-        this.presentToast('Sesión cerrada.', 'warning');
-        return;
+    this.profileSubscription = this.authService.userProfile$.subscribe(
+      (userData) => {
+        if (!userData) {
+          this.cargando = false;
+          this.misCondominios = [];
+          this.condominioSeleccionado = null;
+          this.presentToast('Sesión cerrada.', 'warning');
+          return;
+        }
+        this.cargarCondominios(userData);
       }
-      this.cargarCondominios(userData);
-    });
+    );
   }
 
   async cargarCondominios(userData: any) {
@@ -61,7 +77,10 @@ export class VisitasPage implements OnInit, OnDestroy {
     );
 
     if (condominiosDondeEsResidenteInfo.length === 0) {
-      this.presentToast('No tienes un condominio asignado como residente para enviar invitaciones.', 'warning');
+      this.presentToast(
+        'No tienes un condominio asignado como residente para enviar invitaciones.',
+        'warning'
+      );
       this.cargando = false;
       this.misCondominios = [];
       this.condominioSeleccionado = null;
@@ -72,19 +91,29 @@ export class VisitasPage implements OnInit, OnDestroy {
       const promesas = condominiosDondeEsResidenteInfo.map((condoInfo: any) =>
         this.firestoreService.getCondominioById(condoInfo.id)
       );
-      const condominiosCompletos = (await Promise.all(promesas)).filter(c => c);
+      const condominiosCompletos = (await Promise.all(promesas)).filter(
+        (c) => c
+      );
       this.misCondominios = condominiosCompletos;
 
       if (this.misCondominios.length > 0) {
-        const stillValid = this.misCondominios.some(c => c.id === this.condominioSeleccionado?.id);
+        const stillValid = this.misCondominios.some(
+          (c) => c.id === this.condominioSeleccionado?.id
+        );
         if (!stillValid) this.condominioSeleccionado = this.misCondominios[0];
       } else {
-        this.presentToast('No se encontraron los detalles de tus condominios de residencia.', 'danger');
+        this.presentToast(
+          'No se encontraron los detalles de tus condominios de residencia.',
+          'danger'
+        );
         this.condominioSeleccionado = null;
       }
     } catch (error) {
       console.error('Error al cargar condominios de residencia:', error);
-      this.presentToast('Error al cargar la información de condominios.', 'danger');
+      this.presentToast(
+        'Error al cargar la información de condominios.',
+        'danger'
+      );
       this.condominioSeleccionado = null;
     } finally {
       this.cargando = false;
@@ -100,16 +129,22 @@ export class VisitasPage implements OnInit, OnDestroy {
 
     const alert = await this.alertCtrl.create({
       header: 'Seleccionar Condominio',
-      inputs: this.misCondominios.map(condo => ({
+      inputs: this.misCondominios.map((condo) => ({
         name: 'condominio',
         type: 'radio',
         label: condo.nombre,
         value: condo,
         checked: this.condominioSeleccionado?.id === condo.id,
       })),
+      cssClass: 'blockia-alert blockia-alert--condo', // 👈 mismo estilo que Home
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
-        { text: 'Aceptar', handler: (data) => { if (data) this.condominioSeleccionado = data; } },
+        {
+          text: 'Aceptar',
+          handler: (data) => {
+            if (data) this.condominioSeleccionado = data;
+          },
+        },
       ],
     });
     await alert.present();
@@ -117,35 +152,60 @@ export class VisitasPage implements OnInit, OnDestroy {
 
   async addVisitaForm() {
     const anfitrionId = this.authService.currentUser?.uid;
-    if (!anfitrionId) return this.presentToast('Error: No se pudo identificar al anfitrión.', 'danger');
+    if (!anfitrionId)
+      return this.presentToast(
+        'Error: No se pudo identificar al anfitrión.',
+        'danger'
+      );
 
     try {
-      if (!this.visitaName || !this.visitaPhone || !this.visitaPatente || !this.visitaHoraInicio || !this.visitaHoraFin) {
+      if (
+        !this.visitaName ||
+        !this.visitaPhone ||
+        !this.visitaPatente ||
+        !this.visitaHoraInicio ||
+        !this.visitaHoraFin
+      ) {
         return this.presentToast('Completa todos los campos.', 'warning');
       }
       if (!this.condominioSeleccionado) {
-        return this.presentToast('Selecciona un condominio válido.', 'warning');
+        return this.presentToast(
+          'Selecciona un condominio válido.',
+          'warning'
+        );
       }
       if (this.visitaHoraFin <= this.visitaHoraInicio) {
-        return this.presentToast('La hora de salida debe ser mayor que la de entrada.', 'warning');
+        return this.presentToast(
+          'La hora de salida debe ser mayor que la de entrada.',
+          'warning'
+        );
       }
 
       // Teléfono
       let phone = this.visitaPhone.replace(/\s+/g, '');
       if (phone.startsWith('9') && phone.length === 9) phone = '+56' + phone;
       else if (!(phone.startsWith('+569') && phone.length === 12))
-        return this.presentToast('Formato de teléfono inválido. Usa +569xxxxxxxx o 9xxxxxxxx.', 'warning');
+        return this.presentToast(
+          'Formato de teléfono inválido. Usa +569xxxxxxxx o 9xxxxxxxx.',
+          'warning'
+        );
 
       // Patente
       const patenteInput = this.visitaPatente.toUpperCase().trim();
       const formatoAuto = /^[A-Z]{4}\d{2}$/;
       const formatoMoto = /^[A-Z]{3}0\d{2}$/;
       if (!formatoAuto.test(patenteInput) && !formatoMoto.test(patenteInput)) {
-        return this.presentToast('Formato de patente inválido. Usa AAAA11 o AAA011.', 'warning');
+        return this.presentToast(
+          'Formato de patente inválido. Usa AAAA11 o AAA011.',
+          'warning'
+        );
       }
 
       const visitanteId = await this.firestoreService.findOrCreateVisitante(
-        this.visitaName, phone, patenteInput, this.condominioSeleccionado.id
+        this.visitaName,
+        phone,
+        patenteInput,
+        this.condominioSeleccionado.id
       );
 
       const visitaData = {
@@ -157,7 +217,7 @@ export class VisitasPage implements OnInit, OnDestroy {
         horaInicio: this.visitaHoraInicio,
         horaFin: this.visitaHoraFin,
         condominioId: this.condominioSeleccionado.id,
-        fecha: Timestamp.now()
+        fecha: Timestamp.now(),
       };
 
       await this.firestoreService.registrarVisita(visitaData);
@@ -167,7 +227,10 @@ export class VisitasPage implements OnInit, OnDestroy {
         `Tu acceso es válido desde ${this.visitaHoraInicio} hasta ${this.visitaHoraFin}.\n` +
         `Patente registrada: ${patenteInput}.\n` +
         `Condominio: ${this.condominioSeleccionado.nombre}`;
-      const whatsappUrl = `https://wa.me/${phone.replace('+', '')}?text=${encodeURIComponent(mensaje)}`;
+      const whatsappUrl = `https://wa.me/${phone.replace(
+        '+',
+        ''
+      )}?text=${encodeURIComponent(mensaje)}`;
       window.open(whatsappUrl, '_blank');
 
       this.presentToast('Invitación enviada correctamente ✅', 'success');
@@ -186,18 +249,30 @@ export class VisitasPage implements OnInit, OnDestroy {
     this.visitaHoraFin = '';
   }
 
-  async presentToast(message: string, color: 'success' | 'warning' | 'danger' | 'dark' = 'dark') {
-    const toast = await this.toastCtrl.create({ message, duration: 2500, position: 'bottom', color });
+  async presentToast(
+    message: string,
+    color: 'success' | 'warning' | 'danger' | 'dark' = 'dark'
+  ) {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 2500,
+      position: 'bottom',
+      color,
+    });
     toast.present();
   }
 
   async verHistorialInvitaciones() {
     const user = this.authService.currentUser;
-    if (!user) return this.presentToast('No se pudo obtener tu información de usuario.', 'danger');
+    if (!user)
+      return this.presentToast(
+        'No se pudo obtener tu información de usuario.',
+        'danger'
+      );
 
     const modal = await this.modalCtrl.create({
       component: HistorialInvitacionesComponent,
-      componentProps: { userId: user.uid }
+      componentProps: { userId: user.uid },
     });
     await modal.present();
   }

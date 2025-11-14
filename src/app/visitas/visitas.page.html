@@ -1,63 +1,110 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button menu="first"></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Visitas</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="visitas-content">
 
-<ion-content class="visitas-content">
-  <div class="wrapper ion-padding">
-    <b>Agregar una visita</b>
+  <div class="visitas-sheet ion-padding">
 
-    <form (ngSubmit)="addVisitaForm()">
-      <ion-item>
-        <ion-label position="floating">Nombre</ion-label>
-        <ion-input type="text" [(ngModel)]="visitaName" name="name" required></ion-input>
-      </ion-item>
+    <!-- Encabezado de la vista -->
+    <header class="visitas-header">
+      <h1>Visitas</h1>
+      <p>Crea invitaciones y envíalas por WhatsApp.</p>
+    </header>
 
-      <ion-item>
-        <ion-label position="floating">Teléfono</ion-label>
-        <ion-input type="tel" [(ngModel)]="visitaPhone" name="phone" required></ion-input>
-      </ion-item>
+    <!-- Tarjeta principal con el formulario -->
+    <section class="visitas-card">
+      <h2 class="card-title">Agregar una visita</h2>
 
-      <ion-item>
-        <ion-label position="floating">Patente</ion-label>
-        <ion-input type="text" [(ngModel)]="visitaPatente" name="patente" required></ion-input>
-      </ion-item>
+      <form (ngSubmit)="addVisitaForm()">
+        <ion-item class="field-item">
+          <ion-label position="floating">Nombre</ion-label>
+          <ion-input
+            type="text"
+            [(ngModel)]="visitaName"
+            name="name"
+            required>
+          </ion-input>
+        </ion-item>
 
-      <ion-item>
-        <ion-label position="floating">Hora de entrada</ion-label>
-        <ion-input type="time" [(ngModel)]="visitaHoraInicio" name="horaInicio" required></ion-input>
-      </ion-item>
+        <ion-item class="field-item">
+          <ion-label position="floating">Teléfono</ion-label>
+          <ion-input
+            type="tel"
+            [(ngModel)]="visitaPhone"
+            name="phone"
+            required>
+          </ion-input>
+        </ion-item>
 
-      <ion-item>
-        <ion-label position="floating">Hora de salida</ion-label>
-        <ion-input type="time" [(ngModel)]="visitaHoraFin" name="horaFin" required></ion-input>
-      </ion-item>
+        <ion-item class="field-item">
+          <ion-label position="floating">Patente</ion-label>
+          <ion-input
+            type="text"
+            [(ngModel)]="visitaPatente"
+            name="patente"
+            required>
+          </ion-input>
+        </ion-item>
 
-      <p class="envio-a">
-        Enviar a:
-        <strong>{{ condominioSeleccionado?.nombre || 'Ninguno seleccionado' }}</strong>
-        <button
-          *ngIf="(misCondominios?.length ?? 0) > 1"
+        <div class="time-row">
+          <ion-item class="field-item time-item">
+            <ion-label position="floating">Hora de entrada</ion-label>
+            <ion-input
+              type="time"
+              [(ngModel)]="visitaHoraInicio"
+              name="horaInicio"
+              required>
+            </ion-input>
+          </ion-item>
+
+          <ion-item class="field-item time-item">
+            <ion-label position="floating">Hora de salida</ion-label>
+            <ion-input
+              type="time"
+              [(ngModel)]="visitaHoraFin"
+              name="horaFin"
+              required>
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <!-- Enviar a condominio -->
+        <p class="envio-a">
+          Enviar a:
+          <span class="envio-condo">
+            {{ condominioSeleccionado?.nombre || 'Ninguno seleccionado' }}
+          </span>
+
+          <button
+            *ngIf="(misCondominios?.length ?? 0) > 1"
+            type="button"
+            class="btn-cambiar"
+            (click)="cambiarCondominio()">
+            Cambiar
+          </button>
+        </p>
+
+        <!-- Botón principal -->
+        <ion-button
+          expand="block"
+          color="primary"
+          type="submit"
+          class="btn-primary">
+          ENVIAR INVITACIÓN (WHATSAPP)
+        </ion-button>
+
+        <!-- Botón secundario: historial -->
+        <ion-button
+          expand="block"
+          fill="outline"
+          color="medium"
           type="button"
-          class="btn-cambiar"
-          (click)="cambiarCondominio()">
-          Cambiar
-        </button>
-      </p>
+          class="btn-secondary"
+          (click)="verHistorialInvitaciones()">
+          Ver historial de invitaciones
+        </ion-button>
+      </form>
+    </section>
 
-      <ion-button expand="block" color="primary" type="submit" class="ion-margin-top">
-        ENVIAR INVITACIÓN (WHATSAPP)
-      </ion-button>
-
-      <!-- Botón secundario para ver historial (reemplaza el FAB) -->
-      <ion-button expand="block" fill="outline" color="medium" class="ion-margin-top"
-                  type="button" (click)="verHistorialInvitaciones()">
-        Ver historial de invitaciones
-      </ion-button>
-    </form>
   </div>
+
+  <!-- Barra inferior de navegación -->
+  <app-menu-lateral></app-menu-lateral>
 </ion-content>

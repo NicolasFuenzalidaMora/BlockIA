@@ -1,81 +1,147 @@
-/* Fondo + padding general del contenido */
+/* Fondo general coherente con login / home */
 .visitas-content {
-  --background: #22223b;
+  --background: #f3f6fd;
 }
 
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  text-align: center;
-  font-family: 'Unbounded', sans-serif;
-  padding: 16px;
+/* Lienzo principal con espacio para la barra inferior */
+.visitas-sheet {
+  min-height: 100vh;
+  min-height: 100dvh;
   box-sizing: border-box;
-  width: 100%;
-  color: #fff;
-}
-
-b {
-  margin-bottom: 20px;
-  font-size: 1.3rem;
-  color: #ffffff;
-  width: 100%;
-  text-align: center;
-  font-weight: 600;
-}
-
-form {
-  width: 100%;
+  padding: 24px 16px calc(96px + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
-ion-item {
-  --background: #3e3e5a;
-  --color: #ffffff;
-  margin-top: 12px;
-  border-radius: 8px;
-  --border-color: transparent;
-  --highlight-color-focused: var(--ion-color-primary);
+/* Encabezado de la vista */
+.visitas-header {
+  width: min(680px, 100%);
+  margin-bottom: 12px;
+  text-align: left;
 
-  ion-input {
-    --color: #ffffff;
-    --placeholder-color: #bdbdd3;
+  h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #111827;
   }
 
-  ion-label[position="floating"] {
-    color: #bdbdd3;
+  p {
+    margin: 4px 0 0;
+    font-size: 0.95rem;
+    color: #6b7280;
+  }
+}
+
+/* Tarjeta del formulario */
+.visitas-card {
+  width: min(680px, 100%);
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px 18px 18px;
+  box-shadow:
+    0 18px 38px rgba(15, 23, 42, 0.08),
+    0 8px 18px rgba(59, 110, 246, 0.06);
+}
+
+.card-title {
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+/* Formulario */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Campos */
+.field-item {
+  --background: #f9fafb;
+  --color: #111827;
+  --border-color: transparent;
+  --highlight-color-focused: #3b6ef6;
+  border-radius: 12px;
+  margin-top: 4px;
+
+  ion-input {
+    --color: #111827;
+    --placeholder-color: #9ca3af;
+  }
+
+  ion-label[position='floating'] {
+    color: #6b7280;
     font-size: 0.9rem;
   }
 
-  &.item-has-focus ion-label[position="floating"],
-  &.item-has-value ion-label[position="floating"] {
-    color: var(--ion-color-primary-tint);
+  &.item-has-focus ion-label[position='floating'],
+  &.item-has-value ion-label[position='floating'] {
+    color: #3b6ef6;
   }
 }
 
-ion-button {
-  border-radius: 16px;
-  margin-top: 20px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  font-weight: bold;
-  --padding-top: 14px;
-  --padding-bottom: 14px;
+/* Horarios en fila (en móviles se apilan suave) */
+.time-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.time-item {
+  flex: 1 1 140px;
 }
 
 /* Texto “Enviar a …” y botón cambiar */
 .envio-a {
-  font-size: 0.9rem;
-  color: #d0d0d0;
-  margin: 12px 0 0;
+  margin: 10px 2px 0;
+  font-size: 0.88rem;
+  color: #6b7280;
   text-align: left;
+
+  .envio-condo {
+    font-weight: 600;
+    color: #111827;
+    margin-left: 4px;
+  }
 }
+
 .btn-cambiar {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   margin-left: 6px;
   background: none;
   border: none;
-  color: var(--ion-color-primary);
+  color: #3b6ef6;
   cursor: pointer;
-  vertical-align: baseline;
+  font-weight: 600;
+}
+
+/* Botones */
+.btn-primary,
+.btn-secondary {
+  border-radius: 14px;
+  margin-top: 14px;
+  font-weight: 700;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  box-shadow: 0 10px 25px rgba(59, 110, 246, 0.28);
+}
+
+.btn-secondary {
+  box-shadow: none;
+  margin-top: 8px;
+}
+
+/* Responsive fino */
+@media (max-width: 480px) {
+  .visitas-sheet {
+    padding-inline: 14px;
+  }
+
+  .visitas-card {
+    padding-inline: 16px;
+  }
 }
