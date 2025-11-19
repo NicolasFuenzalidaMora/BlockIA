@@ -1,136 +1,253 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button menu="first"></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Panel de Administración</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- Admin: panel con tarjeta centrada + acordeones -->
+<ion-content [fullscreen]="true" class="admin-content">
 
-<ion-content class="admin-content ion-padding">
+  <div class="admin-shell">
+    <div class="admin-card">
 
-  <ion-item lines="none" color="light" style="margin-bottom: 10px; border-radius: 8px;">
-    <ion-label style="font-size: 0.9em;">
-      <span style="font-weight: 500;">Rol Detectado:</span> {{ rolActualDetectado }}
-    </ion-label>
-  </ion-item>
-  <ion-accordion-group>
+      <!-- Encabezado del panel -->
+      <header class="admin-header">
+        <div class="admin-header-main">
+          <h1 class="admin-title">Panel de Administración</h1>
+          <p class="admin-subtitle">
+            Gestiona condominios, usuarios y solicitudes desde un solo lugar.
+          </p>
+        </div>
 
-    <ion-accordion value="condominio" *ngIf="esSuperAdmin">
-      <ion-item slot="header" color="light">
-        <ion-label>🏢 Crear Nuevo Condominio</ion-label>
-      </ion-item>
-      <div slot="content">
-        <ion-card>
-          <ion-card-content>
-            <form [formGroup]="condominioForm" (ngSubmit)="crearCondominio()">
-              <ion-list>
-                <ion-item> <ion-label position="floating">Nombre</ion-label> <ion-input formControlName="nombre"></ion-input> </ion-item>
-                <ion-item> <ion-label position="floating">Dirección</ion-label> <ion-input formControlName="direccion"></ion-input> </ion-item>
-              </ion-list>
-              <ion-button expand="block" color="success" type="submit" [disabled]="condominioForm.invalid"> ➕ Crear Condominio </ion-button>
-            </form>
-          </ion-card-content>
-        </ion-card>
-      </div>
-    </ion-accordion>
+        <div class="role-pill">
+          <span class="role-pill-label">Rol detectado</span>
+          <span class="role-pill-value">{{ rolActualDetectado }}</span>
+        </div>
+      </header>
 
-    <ion-accordion value="registrar">
-      <ion-item slot="header" color="light">
-        <ion-label>👤 Registrar Nuevo Usuario</ion-label>
-      </ion-item>
-      <div slot="content" *ngIf="!cargandoCondominios; else cargandoCondosTpl">
-        <ion-card>
-          <ion-card-content>
-            <form [formGroup]="userForm" (ngSubmit)="registrarUsuario()">
-              <ion-list>
-                <ion-item><ion-label position="floating">Nombre</ion-label><ion-input formControlName="nombre"></ion-input></ion-item>
-                <ion-item><ion-label position="floating">Teléfono</ion-label><ion-input type="tel" formControlName="telefono" placeholder="+569... o 9..."></ion-input></ion-item>
-                <ion-item><ion-label position="floating">Patente (Opcional)</ion-label><ion-input formControlName="patente" placeholder="AAAA11"></ion-input></ion-item>
-                <ion-item><ion-label position="floating">Rol (en Condominio)</ion-label><ion-select formControlName="rol">
-                    <ion-select-option value="residente">Residente</ion-select-option>
-                    <ion-select-option value="conserjeria">Conserjería</ion-select-option>
-                    <ion-select-option value="administrador">Administrador</ion-select-option>
-                </ion-select></ion-item>
-                <ion-item><ion-label position="floating">Departamento</ion-label><ion-input formControlName="departamento"></ion-input></ion-item>
-                <ion-item>
-                    <ion-label position="floating">Condominio</ion-label>
-                    <ion-select formControlName="condominioId">
-                      <ion-select-option *ngFor="let c of condominiosParaSelect" [value]="c.id">
+      <!-- Acordeones principales -->
+      <ion-accordion-group class="admin-accordion-group">
+
+        <!-- CREAR CONDOMINIO (solo super admin) -->
+        <ion-accordion value="condominio" *ngIf="esSuperAdmin">
+          <ion-item slot="header" class="accordion-header">
+            <ion-label>🏢 Crear nuevo condominio</ion-label>
+          </ion-item>
+
+          <div slot="content" class="accordion-content">
+            <ion-card class="accordion-card">
+              <ion-card-content>
+                <form [formGroup]="condominioForm" (ngSubmit)="crearCondominio()">
+                  <ion-list>
+                    <ion-item>
+                      <ion-label position="floating">Nombre</ion-label>
+                      <ion-input formControlName="nombre"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Dirección</ion-label>
+                      <ion-input formControlName="direccion"></ion-input>
+                    </ion-item>
+                  </ion-list>
+
+                  <ion-button
+                    expand="block"
+                    color="success"
+                    type="submit"
+                    [disabled]="condominioForm.invalid">
+                    ➕ Crear condominio
+                  </ion-button>
+                </form>
+              </ion-card-content>
+            </ion-card>
+          </div>
+        </ion-accordion>
+
+        <!-- REGISTRAR NUEVO USUARIO -->
+        <ion-accordion value="registrar">
+          <ion-item slot="header" class="accordion-header">
+            <ion-label>👤 Registrar nuevo usuario</ion-label>
+          </ion-item>
+
+          <div slot="content" class="accordion-content" *ngIf="!cargandoCondominios; else cargandoCondosTpl">
+            <ion-card class="accordion-card">
+              <ion-card-content>
+                <form [formGroup]="userForm" (ngSubmit)="registrarUsuario()">
+                  <ion-list>
+
+                    <ion-item>
+                      <ion-label position="floating">Nombre</ion-label>
+                      <ion-input formControlName="nombre"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Teléfono</ion-label>
+                      <ion-input
+                        type="tel"
+                        formControlName="telefono"
+                        placeholder="+569... o 9...">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Patente (opcional)</ion-label>
+                      <ion-input
+                        formControlName="patente"
+                        placeholder="AAAA11">
+                      </ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Rol (en condominio)</ion-label>
+                      <ion-select formControlName="rol">
+                        <ion-select-option value="residente">Residente</ion-select-option>
+                        <ion-select-option value="conserjeria">Conserjería</ion-select-option>
+                        <ion-select-option value="administrador">Administrador</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Departamento</ion-label>
+                      <ion-input formControlName="departamento"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label position="floating">Condominio</ion-label>
+                      <ion-select formControlName="condominioId">
+                        <ion-select-option
+                          *ngFor="let c of condominiosParaSelect"
+                          [value]="c.id">
                           {{ c.nombre }}
-                      </ion-select-option>
-                      <ion-select-option *ngIf="condominiosParaSelect.length === 0" disabled="true">
-                           No hay condominios disponibles para asignar
-                       </ion-select-option>
-                    </ion-select>
-                </ion-item>
-              </ion-list>
-              <ion-button expand="block" type="submit" color="primary" [disabled]="userForm.invalid || condominiosParaSelect.length === 0"> 👤 Registrar Usuario </ion-button>
-            </form>
-          </ion-card-content>
-        </ion-card>
-      </div>
-      <ng-template #cargandoCondosTpl>
-          <div class="loading-spinner ion-padding">
+                        </ion-select-option>
+
+                        <ion-select-option
+                          *ngIf="condominiosParaSelect.length === 0"
+                          disabled="true">
+                          No hay condominios disponibles para asignar
+                        </ion-select-option>
+                      </ion-select>
+                    </ion-item>
+
+                  </ion-list>
+
+                  <ion-button
+                    expand="block"
+                    type="submit"
+                    color="primary"
+                    [disabled]="userForm.invalid || condominiosParaSelect.length === 0">
+                    👤 Registrar usuario
+                  </ion-button>
+                </form>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+          <ng-template #cargandoCondosTpl>
+            <div class="loading-spinner">
               <ion-spinner name="crescent"></ion-spinner>
               <p>Cargando lista de condominios...</p>
+            </div>
+          </ng-template>
+        </ion-accordion>
+
+        <!-- GESTIONAR ROLES / EDICIÓN DE USUARIO -->
+        <ion-accordion value="gestionar">
+          <ion-item slot="header" class="accordion-header">
+            <ion-label>👥 Gestionar roles de usuarios</ion-label>
+          </ion-item>
+
+          <div slot="content" class="accordion-content">
+            <ion-card class="accordion-card">
+              <ion-card-content>
+                <form [formGroup]="telefonoBusquedaForm" (ngSubmit)="buscarUsuario($event)">
+                  <ion-item>
+                    <ion-label position="floating">Buscar por teléfono</ion-label>
+                    <ion-input
+                      type="tel"
+                      formControlName="telefono"
+                      placeholder="+569...">
+                    </ion-input>
+                    <ion-icon name="search-outline" slot="end" color="medium"></ion-icon>
+                  </ion-item>
+
+                  <ion-button
+                    expand="block"
+                    type="submit"
+                    [disabled]="telefonoBusquedaForm.invalid || cargandoBusqueda">
+
+                    <ion-spinner *ngIf="cargandoBusqueda" name="crescent"></ion-spinner>
+                    <span *ngIf="!cargandoBusqueda">Buscar usuario</span>
+                  </ion-button>
+                </form>
+              </ion-card-content>
+            </ion-card>
           </div>
-       </ng-template>
-    </ion-accordion>
+        </ion-accordion>
 
-    <ion-accordion value="gestionar">
-      <ion-item slot="header" color="light">
-        <ion-label>👥 Gestionar Roles de Usuarios</ion-label>
-      </ion-item>
-      <div slot="content">
-        <ion-card>
-          <ion-card-content>
-            <form [formGroup]="telefonoBusquedaForm" (ngSubmit)="buscarUsuario($event)">
-              <ion-item>
-                <ion-label position="floating">Buscar por Teléfono</ion-label>
-                <ion-input type="tel" formControlName="telefono" placeholder="+569"></ion-input>
-                <ion-icon name="search-outline" slot="end" color="medium"></ion-icon>
-              </ion-item>
-              <ion-button expand="block" type="submit" [disabled]="telefonoBusquedaForm.invalid || cargandoBusqueda">
-                <ion-spinner *ngIf="cargandoBusqueda" name="crescent"></ion-spinner>
-                <span *ngIf="!cargandoBusqueda">Buscar Usuario</span>
-              </ion-button>
-            </form>
-          </ion-card-content>
-        </ion-card>
-      </div>
-    </ion-accordion>
+        <!-- SOLICITUDES PENDIENTES -->
+        <ion-accordion value="solicitudes">
+          <ion-item slot="header" class="accordion-header">
+            <ion-label>🔔 Solicitudes pendientes</ion-label>
+            <ion-badge
+              slot="end"
+              color="warning"
+              *ngIf="solicitudes.length > 0">
+              {{ solicitudes.length }}
+            </ion-badge>
+          </ion-item>
 
-    <ion-accordion value="solicitudes">
-      <ion-item slot="header" color="light">
-        <ion-label>🔔 Solicitudes Pendientes</ion-label>
-        <ion-badge slot="end" color="warning" *ngIf="solicitudes.length > 0">{{ solicitudes.length }}</ion-badge>
-      </ion-item>
-      <div slot="content">
-        <div *ngIf="cargandoSolicitudes" class="loading-spinner">
-            <ion-spinner name="crescent"></ion-spinner>
-            <p>Cargando solicitudes...</p>
-        </div>
-        <div *ngIf="!cargandoSolicitudes && solicitudes.length === 0" class="empty-state ion-padding ion-text-center">
-          <p>No hay solicitudes pendientes.</p>
-        </div>
-        <ion-list *ngIf="!cargandoSolicitudes && solicitudes.length > 0" lines="full" class="ion-no-padding">
-          <ion-card *ngFor="let sol of solicitudes" class="solicitud-card">
-            <ion-card-header> <ion-card-title>{{ sol.nombreUsuario }}</ion-card-title> </ion-card-header>
-            <ion-card-content>
-              <p><strong>Condominio:</strong> {{ getNombreCondominio(sol.condominioId) }}</p>
-              <p><strong>Depto:</strong> {{ sol.departamento }}</p>
-              <p><strong>Tel:</strong> {{ sol.telefonoUsuario }}</p>
-              <p><strong>Patentes:</strong> {{ (sol.patentes || []).join(', ') }}</p>
-              <div class="action-buttons">
-                <ion-button color="danger" fill="outline" size="small" (click)="rechazarSolicitud(sol)"> <ion-icon slot="start" name="close-circle-outline"></ion-icon> Rechazar </ion-button>
-                <ion-button color="success" size="small" (click)="aprobarSolicitud(sol)"> <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon> Aprobar </ion-button>
-              </div>
-            </ion-card-content>
-          </ion-card>
-        </ion-list>
-      </div>
-    </ion-accordion>
+          <div slot="content" class="accordion-content">
+            <div *ngIf="cargandoSolicitudes" class="loading-spinner">
+              <ion-spinner name="crescent"></ion-spinner>
+              <p>Cargando solicitudes...</p>
+            </div>
 
-  </ion-accordion-group>
+            <div
+              *ngIf="!cargandoSolicitudes && solicitudes.length === 0"
+              class="empty-state">
+              <p>No hay solicitudes pendientes.</p>
+            </div>
+
+            <ion-list
+              *ngIf="!cargandoSolicitudes && solicitudes.length > 0"
+              lines="none"
+              class="solicitudes-list">
+
+              <ion-card
+                *ngFor="let sol of solicitudes"
+                class="solicitud-card">
+                <ion-card-header>
+                  <ion-card-title>{{ sol.nombreUsuario }}</ion-card-title>
+                </ion-card-header>
+
+                <ion-card-content>
+                  <p><strong>Condominio:</strong> {{ getNombreCondominio(sol.condominioId) }}</p>
+                  <p><strong>Depto:</strong> {{ sol.departamento }}</p>
+                  <p><strong>Tel:</strong> {{ sol.telefonoUsuario }}</p>
+                  <p><strong>Patentes:</strong> {{ (sol.patentes || []).join(', ') }}</p>
+
+                  <div class="action-buttons">
+                    <ion-button
+                      color="danger"
+                      fill="outline"
+                      size="small"
+                      (click)="rechazarSolicitud(sol)">
+                      <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+                      Rechazar
+                    </ion-button>
+
+                    <ion-button
+                      color="success"
+                      size="small"
+                      (click)="aprobarSolicitud(sol)">
+                      <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+                      Aprobar
+                    </ion-button>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            </ion-list>
+          </div>
+        </ion-accordion>
+
+      </ion-accordion-group>
+    </div>
+  </div>
+
+  <!-- Barra inferior de navegación reutilizable -->
+  <app-menu-lateral></app-menu-lateral>
 </ion-content>

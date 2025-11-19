@@ -1,103 +1,224 @@
-// Ruta: src/app/admin/admin.page.scss
-
-// 1. Fondo oscuro del contenido
+/* Fondo general, mismo tono que el resto de vistas */
 ion-content.admin-content {
-  --background: #22223b;
-  font-family: 'Unbounded', sans-serif;
+  --background: #f3f6fd;
+  font-family: 'Unbounded', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-// 2. Estilos para el ACORDEÓN
-ion-accordion {
-  background: transparent; // Fondo del acordeón transparente
-  margin-bottom: 16px; // Espacio entre acordeones
-  border-radius: 16px;
-  overflow: hidden; // Para que respete el borde redondeado
-
-  // Cabecera del acordeón (el ion-item)
-  ion-item[slot="header"] {
-    // Usamos el color 'light' de Ionic, que es un gris claro, para el cabezal
-    --background: var(--ion-color-light); 
-    --color: var(--ion-color-dark-shade);
-    font-weight: 600;
-  }
-  
-  // Contenido del acordeón (el div que contiene la tarjeta)
-  div[slot="content"] {
-    padding: 0; // Quitamos padding para que la tarjeta pegue
-  }
+/* Lienzo y tarjeta principal */
+.admin-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px calc(96px + env(safe-area-inset-bottom));
+  box-sizing: border-box;
 }
 
-// 3. Estilo para las tarjetas DENTRO del acordeón
-ion-card {
-  margin-left: 0;
-  margin-right: 0;
-  margin-bottom: 0; // Sin margen inferior
-  margin-top: 0; // Sin margen superior
-  background: #2e2e4b;
-  box-shadow: none; // Quitamos la sombra de la tarjeta (el acordeón ya la tiene)
-  // Quitamos el borde redondeado de la tarjeta
-  border-radius: 0; 
+.admin-card {
+  width: min(960px, 100%);
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow:
+    0 24px 70px rgba(15, 23, 42, 0.16),
+    0 0 0 1px rgba(148, 163, 184, 0.18);
+  padding: 22px 20px 24px;
 }
 
-// 4. Títulos de las tarjetas (ahora son menos importantes)
-ion-card-title {
-  font-size: 1.3rem;
-  color: #ffffff;
+/* Header del panel */
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.admin-header-main {
+  max-width: 70%;
+}
+
+.admin-title {
+  margin: 0 0 4px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.admin-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* Pill del rol detectado */
+.role-pill {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 6px 12px;
+  border-radius: 18px;
+  background: #eef2ff;
+  color: #1d4ed8;
+  font-size: 0.78rem;
   font-weight: 600;
-  padding: 4px 0;
 }
 
-// 5. Contenedor de listas
+.role-pill-label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+.role-pill-value {
+  font-size: 0.82rem;
+  color: #1d4ed8;
+}
+
+/* Grupo de acordeones */
+.admin-accordion-group {
+  margin-top: 6px;
+}
+
+/* Acordeón */
+ion-accordion {
+  background: transparent;
+  margin-bottom: 12px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
+/* Cabecera del acordeón */
+.accordion-header {
+  --background: #f9fafb;
+  --color: #111827;
+  font-weight: 600;
+}
+
+/* Contenido del acordeón */
+.accordion-content {
+  padding: 0;
+  background: transparent;
+}
+
+/* Tarjeta interna del acordeón */
+.accordion-card {
+  margin: 0;
+  border-radius: 0 0 18px 18px;
+  background: #ffffff;
+  box-shadow: none;
+  border-top: 1px solid #e5e7eb;
+}
+
+ion-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Listas & items de formularios */
 ion-list {
   background: transparent;
   padding: 0;
   margin-bottom: 10px;
 }
 
-// 6. Estilo de los Items (Formularios)
 ion-item {
-  --background: #3e3e5a;
-  --color: #ffffff;
+  --background: #f9fafb;
+  --color: #111827;
   --border-color: transparent;
-  --highlight-color-focused: var(--ion-color-primary);
-  border-radius: 8px;
-  margin-top: 12px;
+  --highlight-color-focused: #3b6ef6;
+  border-radius: 10px;
+  margin-top: 10px;
 
-  ion-input, ion-select {
-    --color: #ffffff;
-    --placeholder-color: #bdbdd3;
+  ion-input,
+  ion-select {
+    --color: #111827;
+    --placeholder-color: #9ca3af;
   }
-  ion-label[position="floating"] { color: #bdbdd3; }
-  &.item-has-focus ion-label[position="floating"],
-  &.item-has-value ion-label[position="floating"] {
-    color: var(--ion-color-primary-tint);
+
+  ion-label[position='floating'] {
+    color: #9ca3af;
+    font-size: 0.9rem;
+  }
+
+  &.item-has-focus ion-label[position='floating'],
+  &.item-has-value ion-label[position='floating'] {
+    color: #3b6ef6;
   }
 }
 
-// 7. Estilo de los Botones
+/* Botones */
 ion-button {
   border-radius: 16px;
-  margin-top: 25px;
-  font-weight: bold;
-  --padding-top: 15px;
-  --padding-bottom: 15px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  margin-top: 18px;
+  font-weight: 700;
+  --padding-top: 13px;
+  --padding-bottom: 13px;
+  box-shadow: 0 10px 26px rgba(59, 110, 246, 0.35);
 }
 
-// 8. Spinner de carga
-.loading-spinner {
+/* Spinner / estados vacíos */
+.loading-spinner,
+.empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  color: #bdbdd3;
-  ion-spinner { margin-bottom: 10px; }
+  padding: 18px 10px;
+  color: #6b7280;
+  font-size: 0.9rem;
+
+  ion-spinner {
+    margin-bottom: 8px;
+    --color: #3b6ef6;
+  }
 }
 
-// 9. Spinner dentro del botón de búsqueda
-ion-button ion-spinner {
-  margin-right: 10px; // Espacio entre el spinner y el texto
-  width: 20px;
-  height: 20px;
+/* Tarjetas de solicitudes */
+.solicitudes-list {
+  background: transparent;
+  padding-top: 6px;
+}
+
+.solicitud-card {
+  margin: 0 0 10px;
+  border-radius: 16px;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+}
+
+.solicitud-card p {
+  margin: 2px 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+  .admin-card {
+    padding-inline: 16px;
+  }
+
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-header-main {
+    max-width: 100%;
+  }
+
+  .role-pill {
+    align-self: flex-start;
+  }
 }

@@ -12,16 +12,18 @@ import {
   IonAccordion, IonAccordionGroup,
   ModalController,
   IonButtons, IonMenuButton,
-  IonBadge // Importado para solicitudes
+  IonBadge
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { BlockiaFirestoreService } from '../services/blockia-firestore.service';
 import { addIcons } from 'ionicons';
-// Importamos todos los iconos necesarios
 import { searchOutline, checkmarkCircleOutline, closeCircleOutline } from 'ionicons/icons';
 import { EditUserModalComponent } from 'src/app/components/edit-user-modal/edit-user-modal.component';
-import { Subscription } from 'rxjs'; // Importado Subscription
+import { Subscription } from 'rxjs';
+
+// 👇 barra inferior de navegación reutilizable
+import { MenuLateralComponent } from '../menu-lateral/menu-lateral.component';
 
 @Component({
   selector: 'app-admin',
@@ -31,44 +33,43 @@ import { Subscription } from 'rxjs'; // Importado Subscription
   imports: [
     IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonInput, IonLabel, IonList,
     IonSelect, IonSelectOption, IonSpinner, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonIcon,
-    IonAccordion, IonAccordionGroup, IonButtons, IonMenuButton, IonBadge, // Añadido IonBadge
-    ReactiveFormsModule, CommonModule, EditUserModalComponent
+    IonAccordion, IonAccordionGroup, IonButtons, IonMenuButton, IonBadge,
+    ReactiveFormsModule, CommonModule, EditUserModalComponent,
+    MenuLateralComponent, // 👈 añadido
   ]
 })
 export class AdminPage implements OnInit, OnDestroy {
+  // ... TODO EL CÓDIGO QUE YA TENÍAS SIN CAMBIOS ...
 
-  // Formularios
+  // (copio exactamente tu clase completa, no tocamos la lógica)
   condominioForm = new FormGroup({
-      nombre: new FormControl('', [Validators.required]),
-      direccion: new FormControl('', [Validators.required])
+    nombre: new FormControl('', [Validators.required]),
+    direccion: new FormControl('', [Validators.required])
   });
   userForm = new FormGroup({
-      nombre: new FormControl('', [Validators.required]),
-      telefono: new FormControl('', [Validators.required, Validators.pattern(/^(9\d{8}|\+569\d{8})$/)]),
-      patente: new FormControl(''),
-      rol: new FormControl('residente', [Validators.required]),
-      departamento: new FormControl('', [Validators.required]),
-      condominioId: new FormControl('', [Validators.required])
+    nombre: new FormControl('', [Validators.required]),
+    telefono: new FormControl('', [Validators.required, Validators.pattern(/^(9\d{8}|\+569\d{8})$/)]),
+    patente: new FormControl(''),
+    rol: new FormControl('residente', [Validators.required]),
+    departamento: new FormControl('', [Validators.required]),
+    condominioId: new FormControl('', [Validators.required])
   });
   telefonoBusquedaForm = new FormGroup({
-      telefono: new FormControl('', [
-          Validators.required,
-          Validators.pattern(/^(9\d{8}|\+569\d{8})$/)
-      ])
+    telefono: new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^(9\d{8}|\+569\d{8})$/)
+    ])
   });
 
-  // Estados de carga y datos
   cargandoBusqueda = false;
-  condominios: any[] = []; // Lista COMPLETA de todos los condominios
+  condominios: any[] = [];
   cargandoCondominios = true;
   solicitudes: any[] = [];
   cargandoSolicitudes = true;
-  // Lista filtrada para el dropdown de registro
   condominiosParaSelect: any[] = [];
 
-  // Permisos y Rol
   esSuperAdmin = false;
-  condominiosDelAdmin: string[] = []; // IDs que administra
+  condominiosDelAdmin: string[] = [];
   rolActualDetectado: string = 'Cargando...';
   private profileSubscription: Subscription | null = null;
 
@@ -85,28 +86,24 @@ export class AdminPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log('[AdminPage Final Completo] ngOnInit iniciado');
-    // Suscripción al perfil para actualizar rol Y recargar solicitudes
     this.profileSubscription = this.auth.userProfile$.subscribe(perfil => {
-        console.log('[AdminPage Final Completo] Perfil recibido via observable:', perfil ? 'OK' : 'NULL');
-        this.determinarRolUsuario(perfil); // Actualiza 'esSuperAdmin' y 'condominiosDelAdmin'
-        // Actualiza la lista filtrada para el select
-        this.actualizarCondominiosParaSelect();
-        // Solo cargamos solicitudes si ya determinamos el rol
-        if (this.rolActualDetectado !== 'Cargando...' && this.rolActualDetectado !== 'Perfil no disponible') {
-            this.cargarSolicitudes(); // Recarga solicitudes con la info de rol actualizada
-        }
-        this.changeDetector.detectChanges(); // Actualiza HTML
+      console.log('[AdminPage Final Completo] Perfil recibido via observable:', perfil ? 'OK' : 'NULL');
+      this.determinarRolUsuario(perfil);
+      this.actualizarCondominiosParaSelect();
+      if (this.rolActualDetectado !== 'Cargando...' && this.rolActualDetectado !== 'Perfil no disponible') {
+        this.cargarSolicitudes();
+      }
+      this.changeDetector.detectChanges();
     });
-    // Carga inicial de condominios (para selects)
-    this.cargarCondominios(); // Esta llamada también actualizará condominiosParaSelect al terminar
+    this.cargarCondominios();
     console.log('[AdminPage Final Completo] ngOnInit: Suscripción y carga inicial de condominios listas.');
   }
 
   ngOnDestroy() {
-      console.log('[AdminPage Final Completo] ngOnDestroy: Cancelando suscripción.');
-      if (this.profileSubscription) {
-          this.profileSubscription.unsubscribe();
-      }
+    console.log('[AdminPage Final Completo] ngOnDestroy: Cancelando suscripción.');
+    if (this.profileSubscription) {
+      this.profileSubscription.unsubscribe();
+    }
   }
 
   /** Determina rol y guarda IDs de condominios administrados */
