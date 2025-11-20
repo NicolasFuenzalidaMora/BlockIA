@@ -10,48 +10,80 @@
 <ion-content class="modal-content ion-padding">
 
   <div *ngIf="usuario">
+
+    <!-- DATOS BÁSICOS -->
     <form [formGroup]="editForm">
       <ion-item>
         <ion-label position="floating">Nombre Completo</ion-label>
         <ion-input type="text" formControlName="nombre"></ion-input>
       </ion-item>
+
       <ion-item>
         <ion-label position="floating">Departamento / N° Casa</ion-label>
         <ion-input type="text" formControlName="departamento"></ion-input>
       </ion-item>
     </form>
+
     <hr>
 
+    <!-- PATENTES -->
     <ion-list-header>Patentes</ion-list-header>
+
     <ion-item>
       <ion-label position="floating">Agregar Patente</ion-label>
-      <ion-input type="text" [(ngModel)]="patenteActual" (keyup.enter)="agregarPatente()"> </ion-input>
+      <ion-input
+        type="text"
+        [(ngModel)]="patenteActual"
+        (keyup.enter)="agregarPatente()">
+      </ion-input>
       <ion-button slot="end" fill="clear" (click)="agregarPatente()">
         <ion-icon slot="icon-only" name="add-circle"></ion-icon>
       </ion-button>
     </ion-item>
-    <ion-list *ngIf="patentesAgregadas.length > 0" lines="none" class="patentes-list">
+
+    <ion-list
+      *ngIf="patentesAgregadas.length > 0"
+      lines="none"
+      class="patentes-list">
       <ion-item *ngFor="let patente of patentesAgregadas; let i = index">
         <ion-label>{{ patente }}</ion-label>
-        <ion-button slot="end" fill="clear" color="danger" size="small" (click)="eliminarPatente(i)">
+        <ion-button
+          slot="end"
+          fill="clear"
+          color="danger"
+          size="small"
+          (click)="eliminarPatente(i)">
           <ion-icon slot="icon-only" name="trash"></ion-icon>
         </ion-button>
       </ion-item>
     </ion-list>
+
     <hr>
 
+    <!-- ROLES EN CONDOMINIOS EXISTENTES -->
     <ion-list-header>Roles en Condominios</ion-list-header>
 
     <div *ngIf="condominiosEditablesDelUsuario.length === 0">
       <ion-item lines="none">
-        <ion-label color="medium" class="ion-text-wrap">No tienes permiso para editar roles de este usuario en ningún condominio.</ion-label>
+        <ion-label color="medium" class="ion-text-wrap">
+          No tienes permiso para editar roles de este usuario en ningún condominio.
+        </ion-label>
       </ion-item>
     </div>
 
-    <ion-radio-group *ngIf="condominiosEditablesDelUsuario.length > 0" (ionChange)="seleccionarCondominioParaEditar($event.detail.value)" [value]="condominioSeleccionadoId">
+    <ion-radio-group
+      *ngIf="condominiosEditablesDelUsuario.length > 0"
+      (ionChange)="seleccionarCondominioParaEditar($event.detail.value)"
+      [value]="condominioSeleccionadoId">
+
       <ion-list-header>
-        <ion-label>{{ condominiosEditablesDelUsuario.length > 1 ? 'Selecciona Condominio a Editar' : 'Condominio Editable' }}</ion-label>
+        <ion-label>
+          {{ condominiosEditablesDelUsuario.length > 1
+              ? 'Selecciona Condominio a Editar'
+              : 'Condominio Editable' }}
+        </ion-label>
       </ion-list-header>
+
       <ion-item *ngFor="let condo of condominiosEditablesDelUsuario">
         <ion-radio [value]="condo.id" slot="start"></ion-radio>
         <ion-label>{{ condo.nombre }} (Rol actual: {{ condo.rol }})</ion-label>
@@ -59,15 +91,57 @@
     </ion-radio-group>
 
     <ion-item *ngIf="condominiosEditablesDelUsuario.length > 0 && condominioSeleccionadoId">
-      <ion-label position="floating"> Rol en {{ getNombreCondominioSeleccionado() }} </ion-label>
+      <ion-label position="floating">
+        Rol en {{ getNombreCondominioSeleccionado() }}
+      </ion-label>
       <ion-select [formControl]="rolCondominioControl" interface="action-sheet">
         <ion-select-option value="RESIDENTE">Residente</ion-select-option>
         <ion-select-option value="CONSERJERIA">Conserjería</ion-select-option>
         <ion-select-option value="INACTIVO">Inactivo</ion-select-option>
-        </ion-select>
+      </ion-select>
     </ion-item>
 
-    <ion-button expand="block" color="success" (click)="guardarCambios()" [disabled]="editForm.invalid" style="margin-top: 25px;">
+    <!-- AGREGAR A OTRO CONDOMINIO -->
+    <ion-list-header *ngIf="condominiosDisponiblesParaAgregar.length > 0">
+      <ion-label>Agregar a otro condominio</ion-label>
+    </ion-list-header>
+
+    <ion-item *ngIf="condominiosDisponiblesParaAgregar.length > 0">
+      <ion-label position="stacked">Condominio</ion-label>
+      <ion-select [(ngModel)]="nuevoCondominioId" interface="popover">
+        <ion-select-option
+          *ngFor="let condo of condominiosDisponiblesParaAgregar"
+          [value]="condo.id">
+          {{ condo.nombre }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="condominiosDisponiblesParaAgregar.length > 0">
+      <ion-label position="stacked">Rol en nuevo condominio</ion-label>
+      <ion-select [(ngModel)]="nuevoCondominioRol" interface="popover">
+        <ion-select-option value="RESIDENTE">Residente</ion-select-option>
+        <ion-select-option value="CONSERJERIA">Conserjería</ion-select-option>
+        <ion-select-option value="INACTIVO">Inactivo</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button
+      *ngIf="condominiosDisponiblesParaAgregar.length > 0"
+      expand="block"
+      color="primary"
+      (click)="agregarCondominioAlUsuario()"
+      style="margin-top: 10px;">
+      ➕ Agregar Condominio
+    </ion-button>
+
+    <!-- GUARDAR CAMBIOS GENERALES -->
+    <ion-button
+      expand="block"
+      color="success"
+      (click)="guardarCambios()"
+      [disabled]="editForm.invalid"
+      style="margin-top: 25px;">
       💾 Guardar Cambios
     </ion-button>
 
@@ -76,4 +150,5 @@
   <div *ngIf="!usuario" class="ion-text-center">
     <p>No se pudieron cargar los datos del usuario.</p>
   </div>
+
 </ion-content>

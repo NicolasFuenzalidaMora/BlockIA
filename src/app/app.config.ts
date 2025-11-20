@@ -25,7 +25,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
 
     // ✅ Firebase inicialización
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideFirebaseApp(() => initializeApp(environment.firebase)), // <-- AQUÍ
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()), // 👈 habilita autenticación con Firebase
   ],

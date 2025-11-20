@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /login-phone
+Disallow: /admin
+Disallow: /perfil
+Disallow: /completar-perfil
+Disallow: /visitas
+Allow: /
+
+Sitemap: https://blockia.cl/sitemap.xml

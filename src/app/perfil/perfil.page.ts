@@ -54,34 +54,65 @@ export class PerfilPage implements OnInit, OnDestroy {
       } else {
         this.cargando = false;
         this.userProfile = null;
+         this.router.navigate(['/login-phone'], { replaceUrl: true });
       }
     });
   }
+async cargarDatosDeFirestore(uid: string) {
+  this.cargando = true;
+  try {
+    const profile: any = await this.bf.getUserById(uid);
 
-  async cargarDatosDeFirestore(uid: string) {
-    this.cargando = true;
-    try {
-      const profile: any = await this.bf.getUserById(uid);
-      if (profile) {
-        // Condominio “legacy” por condominioId,
-        // si en el futuro cambias a array de condominios, aquí puedes adaptar.
-        if (profile.condominioId) {
-          const condominio: any = await this.bf.getCondominioById(profile.condominioId);
-          profile.nombreCondominio = condominio?.nombre || 'Condominio no encontrado';
+    if (profile) {
+
+      if (Array.isArray(profile.condominios) && profile.condominios.length > 0) {
+        const detalles = await Promise.all(
+          profile.condominios.map(async (c: any) => {
+            const condo = await this.bf.getCondominioById(c.id);
+            return {
+              id: c.id,
+              rol: (c.rol || '').toUpperCase(),
+              nombre: (condo as any)?.nombre || `ID: ${c.id}`,
+            };
+          })
+        );
+
+        // 👇 Filtramos visitantes: solo RESIDENTE / CONSERJERIA
+        const soloResidencia = detalles.filter(d =>
+          d.rol === 'RESIDENTE' || d.rol === 'CONSERJERIA'
+        );
+
+        // Si hay al menos un condominio "real", usamos esos; si no, mostramos todos (solo visitantes)
+        const listaParaMostrar = soloResidencia.length > 0 ? soloResidencia : detalles;
+
+        profile.condominiosDetallados = listaParaMostrar;
+
+        if (listaParaMostrar.length === 1) {
+          profile.nombreCondominio = listaParaMostrar[0].nombre;
         } else {
-          profile.nombreCondominio = 'Sin condominio asignado';
+          const [primero, ...resto] = listaParaMostrar;
+          profile.nombreCondominio = `${primero.nombre} (+${resto.length} más)`;
         }
-        this.userProfile = profile;
+
+      } else if (profile.condominioId) {
+        const condominio: any = await this.bf.getCondominioById(profile.condominioId);
+        profile.nombreCondominio = condominio?.nombre || 'Condominio no encontrado';
+
       } else {
-        this.userProfile = null;
+        profile.nombreCondominio = 'Sin condominio asignado';
       }
-    } catch (e) {
-      console.error('Error al cargar perfil:', e);
+
+      this.userProfile = profile;
+    } else {
       this.userProfile = null;
-    } finally {
-      this.cargando = false;
     }
+  } catch (e) {
+    console.error('Error al cargar perfil:', e);
+    this.userProfile = null;
+  } finally {
+    this.cargando = false;
   }
+}
 
   async editarPerfil() {
     if (!this.userProfile) return;

@@ -296,4 +296,37 @@ export class BlockiaFirestoreService {
     await updateDoc(userRef, { condominios: condominiosArray });
     console.log(`Rol actualizado para usuario ${userId} en condominio ${condominioId} a ${nuevoRol}`);
   }
+
+
+  async addUserToCondominio(userId: string, condominioId: string, nuevoRol: string) {
+    if (!userId || !condominioId || !nuevoRol) {
+      throw new Error('Faltan datos para agregar el condominio al usuario.');
+    }
+
+    const userRef = doc(this.firestore, 'users', userId);
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      throw new Error('Usuario no encontrado.');
+    }
+
+    const userData = userSnap.data() as any;
+    const condominiosActuales: any[] = Array.isArray(userData.condominios) ? userData.condominios : [];
+
+    const yaTiene = condominiosActuales.some(c => c.id === condominioId);
+    if (yaTiene) {
+      throw new Error('El usuario ya pertenece a este condominio.');
+    }
+
+    // Guardamos rol en MAYÚSCULAS para mantener consistencia
+    const rolParaGuardar = nuevoRol.toUpperCase();
+
+    await updateDoc(userRef, {
+      condominios: arrayUnion({ id: condominioId, rol: rolParaGuardar })
+    });
+
+    console.log(`Condominio ${condominioId} agregado al usuario ${userId} con rol ${rolParaGuardar}`);
+  }
+
+
 }

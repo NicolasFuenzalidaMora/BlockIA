@@ -9,6 +9,8 @@ import {
 } from '@angular/fire/firestore';
 import { BlockiaFirestoreService } from './blockia-firestore.service';
 import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
+
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +46,8 @@ export class AuthService implements OnDestroy {
 
   constructor(
     private bf: BlockiaFirestoreService,
-    private firestore: Firestore
+    private firestore: Firestore,
+    private router: Router   
   ) {
     this.auth = getAuth();
 
@@ -239,7 +242,13 @@ export class AuthService implements OnDestroy {
   // ==============================
   // === LOGOUT ===================
   // ==============================
-  async logout() {
-    await this.auth.signOut(); // onAuthStateChanged se encargará del cleanup
+async logout() {
+  try {
+    console.log('[AuthService] Logout solicitado');
+    await this.auth.signOut(); // onAuthStateChanged limpia subjects
+    // NO navegamos aquí, la navegación será GLOBAL en AppComponent
+  } catch (e) {
+    console.error('[AuthService] Error en logout:', e);
   }
+}
 }

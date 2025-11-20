@@ -35,16 +35,45 @@
         <!-- Bloques de información -->
         <div class="perfil-info">
 
-          <!-- Condominio -->
+          <!-- ✅ CONDOMINIO (con acordeón cuando hay varios) -->
           <div class="info-row">
             <div class="info-icon">
               <ion-icon name="business-outline"></ion-icon>
             </div>
             <div class="info-body">
               <p class="info-label">CONDOMINIO</p>
+
+              <!-- Texto resumido (el mismo que ya tenías) -->
               <p class="info-value">
                 {{ userProfile.nombreCondominio || 'Sin condominio asignado' }}
               </p>
+
+              <!-- Acordeón solo si hay MÁS DE 1 condominio -->
+              <div
+                *ngIf="userProfile.condominiosDetallados?.length > 1"
+                class="info-extra">
+
+                <ion-accordion-group>
+                  <ion-accordion value="condominios">
+                    <!-- Cabecera del acordeón -->
+                    <ion-item slot="header" lines="none">
+                      <ion-label>
+                        Ver todos los condominios ({{ userProfile.condominiosDetallados.length }})
+                      </ion-label>
+                    </ion-item>
+
+                    <!-- Contenido del acordeón -->
+<div slot="content" class="condos-list ion-padding-start ion-padding-bottom">
+  <div
+    class="condo-item"
+    *ngFor="let c of userProfile.condominiosDetallados">
+    <div class="condo-name">{{ c.nombre }}</div>
+  </div>
+</div>
+                  </ion-accordion>
+                </ion-accordion-group>
+
+              </div>
             </div>
           </div>
 
